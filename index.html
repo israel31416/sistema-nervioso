@@ -1,813 +1,961 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>El Sistema Nervioso – CETIS 128</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --bg:        #0b0f1a;
-      --surface:   #131929;
-      --card:      #1a2236;
-      --border:    #243050;
-      --accent:    #4fc3f7;
-      --accent2:   #7c83f7;
-      --accent3:   #a78bfa;
-      --text:      #e8edf5;
-      --muted:     #7a8ba8;
-      --highlight: #ffe066;
-      --snc:       #4fc3f7;
-      --snp:       #a78bfa;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 16px;
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-
-    /* ── HEADER ── */
-    header {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 2rem;
-      overflow: hidden;
-    }
-
-    .brain-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 50% 40%, #1a2a4a 0%, transparent 70%),
-        radial-gradient(ellipse 80% 60% at 20% 80%, #1a1040 0%, transparent 60%),
-        var(--bg);
-      z-index: 0;
-    }
-
-    /* Neural network SVG animation */
-    .neural-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.18;
-      z-index: 1;
-    }
-
-    header .content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-    }
-
-    .eyebrow {
-      font-size: 0.75rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.2rem;
-      font-weight: 600;
-    }
-
-    h1 {
-      font-family: 'Lora', serif;
-      font-size: clamp(2.8rem, 8vw, 5.5rem);
-      font-weight: 600;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      margin-bottom: 1.2rem;
-    }
-
-    h1 span {
-      color: var(--accent);
-      font-style: italic;
-    }
-
-    .hero-sub {
-      font-size: 1.15rem;
-      color: var(--muted);
-      max-width: 580px;
-      margin: 0 auto 2.5rem;
-    }
-
-    .scroll-hint {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      color: var(--muted);
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      animation: bounce 2s infinite;
-    }
-
-    .scroll-hint svg { opacity: 0.5; }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(6px); }
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(11, 15, 26, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-    }
-
-    nav ul {
-      display: flex;
-      list-style: none;
-      gap: 0;
-      max-width: 1100px;
-      margin: 0 auto;
-      overflow-x: auto;
-    }
-
-    nav a {
-      display: block;
-      padding: 1rem 1.2rem;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      transition: color 0.2s;
-      border-bottom: 2px solid transparent;
-    }
-
-    nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
-
-    /* ── MAIN ── */
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    section {
-      padding: 5rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    section:last-of-type { border-bottom: none; }
-
-    .section-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 600;
-      margin-bottom: 0.8rem;
-    }
-
-    h2 {
-      font-family: 'Lora', serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 600;
-      line-height: 1.2;
-      margin-bottom: 1.5rem;
-      color: var(--text);
-    }
-
-    p { color: #b0bdd0; margin-bottom: 1rem; }
-
-    /* ── DIVISIÓN CARDS ── */
-    .division-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-top: 2.5rem;
-    }
-
-    @media (max-width: 640px) {
-      .division-grid { grid-template-columns: 1fr; }
-    }
-
-    .division-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.25s, border-color 0.25s;
-    }
-
-    .division-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent);
-    }
-
-    .division-card .tag {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.25rem 0.75rem;
-      border-radius: 99px;
-      margin-bottom: 1rem;
-    }
-
-    .snc-card .tag { background: rgba(79,195,247,0.15); color: var(--snc); }
-    .snp-card .tag { background: rgba(167,139,250,0.15); color: var(--snp); }
-
-    .division-card h3 {
-      font-family: 'Lora', serif;
-      font-size: 1.5rem;
-      margin-bottom: 0.75rem;
-      color: var(--text);
-    }
-
-    .division-card .accent-line {
-      width: 40px;
-      height: 3px;
-      border-radius: 2px;
-      margin-bottom: 1rem;
-    }
-
-    .snc-card .accent-line { background: var(--snc); }
-    .snp-card .accent-line { background: var(--snp); }
-
-    /* ── COMPONENTS ── */
-    .components-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.2rem;
-      margin-top: 2.5rem;
-    }
-
-    .comp-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.75rem;
-      transition: transform 0.2s, border-color 0.2s;
-    }
-
-    .comp-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--accent2);
-    }
-
-    .comp-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1rem;
-      font-size: 1.4rem;
-    }
-
-    .comp-card h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--text);
-    }
-
-    .comp-card p { font-size: 0.9rem; color: var(--muted); margin: 0; }
-
-    /* ── LÓBULOS ── */
-    .lobulos-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-top: 2.5rem;
-      align-items: start;
-    }
-
-    @media (max-width: 700px) {
-      .lobulos-layout { grid-template-columns: 1fr; }
-    }
-
-    /* Brain SVG diagram */
-    .brain-diagram {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .lobulos-list { display: flex; flex-direction: column; gap: 1rem; }
-
-    .lobulo-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.2rem 1.5rem;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-      transition: border-color 0.2s;
-    }
-
-    .lobulo-item:hover { border-color: var(--accent3); }
-
-    .lobulo-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 6px;
-    }
-
-    .lobulo-item h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem; }
-    .lobulo-item p { font-size: 0.85rem; color: var(--muted); margin: 0; }
-
-    /* ── FRONTAL FUNCTIONS ── */
-    .frontal-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .frontal-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--highlight);
-      border-radius: 0 12px 12px 0;
-      padding: 1.2rem;
-    }
-
-    .frontal-item h4 { font-size: 0.9rem; font-weight: 700; color: var(--highlight); margin-bottom: 0.3rem; }
-    .frontal-item p { font-size: 0.83rem; color: var(--muted); margin: 0; }
-
-    /* ── FUENTES ── */
-    .sources-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .source-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.2rem;
-      text-decoration: none;
-      display: block;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-
-    .source-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-
-    .source-card .src-label {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-      font-weight: 700;
-      margin-bottom: 0.4rem;
-    }
-
-    .source-card p {
-      font-size: 0.85rem;
-      color: var(--text);
-      margin: 0;
-      font-weight: 500;
-    }
-
-    /* ── FOOTER / AUTORES ── */
-    footer {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 3.5rem 1.5rem;
-      text-align: center;
-    }
-
-    .footer-inner { max-width: 800px; margin: 0 auto; }
-
-    .cetis-badge {
-      display: inline-block;
-      background: rgba(79,195,247,0.1);
-      border: 1px solid rgba(79,195,247,0.3);
-      border-radius: 99px;
-      padding: 0.4rem 1.2rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.5rem;
-    }
-
-    footer h3 {
-      font-family: 'Lora', serif;
-      font-size: 1.3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .authors-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.75rem;
-      margin: 1.5rem 0;
-    }
-
-    .author-chip {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 99px;
-      padding: 0.4rem 1rem;
-      font-size: 0.85rem;
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    .footer-note {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 1.5rem;
-    }
-
-    /* ── HIGHLIGHT QUOTE ── */
-    .highlight-box {
-      background: linear-gradient(135deg, rgba(79,195,247,0.08), rgba(124,131,247,0.08));
-      border: 1px solid rgba(79,195,247,0.2);
-      border-radius: 16px;
-      padding: 2rem 2.5rem;
-      margin: 2rem 0;
-      position: relative;
-    }
-
-    .highlight-box::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 20%;
-      bottom: 20%;
-      width: 3px;
-      background: linear-gradient(to bottom, var(--accent), var(--accent2));
-      border-radius: 2px;
-    }
-
-    .highlight-box p { color: var(--text); font-size: 1.05rem; margin: 0; }
-
-    /* ── PULSE DOT ── */
-    .pulse-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-right: 0.5rem;
-      animation: pulse 2s infinite;
-      vertical-align: middle;
-    }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(79,195,247,0.5); }
-      50% { box-shadow: 0 0 0 6px rgba(79,195,247,0); }
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 480px) {
-      nav a { padding: 0.8rem 0.8rem; font-size: 0.75rem; }
-      section { padding: 3.5rem 0; }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>El Sistema Nervioso – CETIS 128 6°B</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ===== TOKENS ===== */
+:root{
+  --bg:#080d18;
+  --surface:#0e1525;
+  --card:#121d30;
+  --card2:#162035;
+  --border:#1e2f4a;
+  --border2:#253860;
+  --cyan:#38bdf8;
+  --violet:#818cf8;
+  --purple:#a78bfa;
+  --yellow:#fbbf24;
+  --green:#34d399;
+  --red:#f87171;
+  --orange:#fb923c;
+  --text:#dde6f4;
+  --muted:#6b82a0;
+  --dim:#3d5070;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:16px;line-height:1.75;overflow-x:hidden}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ===== HERO ===== */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:2rem;position:relative;overflow:hidden;
+}
+.hero-glow{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 55% at 50% 35%,rgba(56,189,248,.07) 0%,transparent 70%),
+             radial-gradient(ellipse 50% 40% at 20% 80%,rgba(129,140,248,.06) 0%,transparent 60%);
+  pointer-events:none;
+}
+#neurons{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.15}
+.hero-inner{position:relative;z-index:2;max-width:820px}
+.eyebrow{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--cyan);font-weight:700;margin-bottom:1rem}
+h1.hero-title{
+  font-family:'Playfair Display',serif;font-size:clamp(3rem,9vw,6.5rem);
+  font-weight:700;line-height:1.05;letter-spacing:-.03em;margin-bottom:1.2rem;
+}
+h1.hero-title em{color:var(--cyan);font-style:italic}
+.hero-desc{font-size:1.1rem;color:var(--muted);max-width:560px;margin:0 auto 2.5rem}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
+.stat-item{text-align:center}
+.stat-num{font-size:2rem;font-weight:700;color:var(--cyan);line-height:1}
+.stat-label{font-size:.72rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.scroll-cue{display:flex;flex-direction:column;align-items:center;gap:.35rem;color:var(--dim);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ===== STICKY NAV ===== */
+nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(8,13,24,.93);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+nav ul{display:flex;list-style:none;max-width:1200px;margin:0 auto;overflow-x:auto;padding:0 1rem;gap:0}
+nav a{
+  display:block;padding:.9rem 1rem;color:var(--muted);text-decoration:none;
+  font-size:.75rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  white-space:nowrap;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;
+}
+nav a:hover{color:var(--cyan);border-bottom-color:var(--cyan)}
+
+/* ===== MAIN ===== */
+main{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+section{padding:5.5rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+
+.sec-label{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--cyan);font-weight:700;margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem}
+.sec-label::before{content:'';display:block;width:20px;height:2px;background:var(--cyan);border-radius:1px}
+h2.sec-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.15;margin-bottom:1.5rem}
+.sec-intro{color:#8fa5be;font-size:1.05rem;max-width:740px;margin-bottom:2.5rem;line-height:1.8}
+
+/* ===== HIGHLIGHT BOX ===== */
+.hl-box{
+  background:linear-gradient(135deg,rgba(56,189,248,.06),rgba(129,140,248,.06));
+  border:1px solid rgba(56,189,248,.18);border-radius:14px;
+  padding:1.75rem 2rem;margin:2rem 0;position:relative;
+}
+.hl-box::before{content:'';position:absolute;left:0;top:15%;bottom:15%;width:3px;background:linear-gradient(var(--cyan),var(--violet));border-radius:2px}
+.hl-box p{color:var(--text);font-size:1rem;margin:0}
+
+/* ===== 2-COL ===== */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}}
+
+/* ===== DIVISION CARDS ===== */
+.div-card{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:2rem;transition:transform .25s,border-color .25s;
+}
+.div-card:hover{transform:translateY(-4px)}
+.div-card.snc:hover{border-color:var(--cyan)}
+.div-card.snp:hover{border-color:var(--purple)}
+.chip{display:inline-block;font-size:.65rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;padding:.22rem .8rem;border-radius:99px;margin-bottom:1rem}
+.chip.snc{background:rgba(56,189,248,.12);color:var(--cyan)}
+.chip.snp{background:rgba(167,139,250,.12);color:var(--purple)}
+.accent-bar{width:36px;height:3px;border-radius:2px;margin-bottom:.9rem}
+.div-card h3{font-family:'Playfair Display',serif;font-size:1.45rem;margin-bottom:.75rem}
+.div-card p{font-size:.92rem;color:#7a96b5;margin-bottom:.6rem}
+.div-card p:last-child{margin-bottom:0}
+
+/* ===== COMPONENT GRID ===== */
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;margin-top:2.5rem}
+.comp-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:1.6rem;transition:transform .2s,border-color .2s;
+}
+.comp-card:hover{transform:translateY(-3px);border-color:var(--violet)}
+.comp-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:.9rem}
+.comp-card h3{font-size:.95rem;font-weight:700;margin-bottom:.4rem;color:var(--text)}
+.comp-card p{font-size:.87rem;color:var(--muted);margin:0;line-height:1.6}
+
+/* ===== BRAIN SVG SECTION ===== */
+.brain-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:2.5rem;align-items:start;margin-top:2.5rem}
+@media(max-width:750px){.brain-layout{grid-template-columns:1fr}}
+.brain-wrap{
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  padding:2rem;display:flex;justify-content:center;align-items:center;
+  position:relative;overflow:hidden;
+}
+.brain-wrap::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 40%,rgba(56,189,248,.05),transparent 70%);
+  pointer-events:none;
+}
+.lobulo-list{display:flex;flex-direction:column;gap:.9rem}
+.lobulo-row{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:1.1rem 1.4rem;display:flex;gap:1rem;align-items:flex-start;
+  transition:border-color .2s,transform .2s;cursor:default;
+}
+.lobulo-row:hover{transform:translateX(4px)}
+.ldot{width:11px;height:11px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.lobulo-row h4{font-size:.92rem;font-weight:700;margin-bottom:.15rem}
+.lobulo-row p{font-size:.83rem;color:var(--muted);margin:0;line-height:1.55}
+
+/* ===== FRONTAL GRID ===== */
+.frontal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:2rem}
+.frontal-card{
+  background:var(--card);border:1px solid var(--border);
+  border-left:3px solid var(--yellow);border-radius:0 12px 12px 0;padding:1.2rem;
+  transition:transform .2s;
+}
+.frontal-card:hover{transform:translateY(-2px)}
+.frontal-card h4{font-size:.88rem;font-weight:700;color:var(--yellow);margin-bottom:.3rem}
+.frontal-card p{font-size:.83rem;color:var(--muted);margin:0;line-height:1.55}
+
+/* ===== NEURONAS SECTION ===== */
+.cell-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem;margin-top:2rem}
+.cell-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.6rem;transition:border-color .2s}
+.cell-card:hover{border-color:var(--green)}
+.cell-title{font-size:.85rem;font-weight:700;color:var(--green);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.5rem}
+.cell-card p{font-size:.87rem;color:var(--muted);margin:0;line-height:1.65}
+
+/* ===== ENFERMEDADES ===== */
+.disease-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem;margin-top:2rem}
+.disease-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:1.6rem;transition:transform .2s,border-color .2s;
+}
+.disease-card:hover{transform:translateY(-3px)}
+.disease-tag{display:inline-block;font-size:.62rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:.2rem .7rem;border-radius:99px;margin-bottom:.8rem}
+.tag-neuro{background:rgba(248,113,113,.12);color:var(--red)}
+.tag-psiq{background:rgba(251,191,36,.12);color:var(--yellow)}
+.tag-auto{background:rgba(167,139,250,.12);color:var(--purple)}
+.tag-vasc{background:rgba(251,146,60,.12);color:var(--orange)}
+.tag-infec{background:rgba(52,211,153,.12);color:var(--green)}
+.disease-card h3{font-size:1rem;font-weight:700;margin-bottom:.4rem;color:var(--text)}
+.disease-card p{font-size:.86rem;color:var(--muted);margin-bottom:.5rem;line-height:1.65}
+.disease-card p:last-child{margin-bottom:0}
+.disease-card strong{color:var(--text)}
+
+/* ===== SINAPSIS / IMPULSO ===== */
+.impulse-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:2rem;border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.step{padding:1.5rem;border-right:1px solid var(--border);background:var(--card);transition:background .2s}
+.step:last-child{border-right:none}
+.step:hover{background:var(--card2)}
+.step-num{font-size:2rem;font-weight:700;color:var(--border2);line-height:1;margin-bottom:.5rem;font-family:'Playfair Display',serif}
+.step h4{font-size:.88rem;font-weight:700;margin-bottom:.3rem;color:var(--cyan)}
+.step p{font-size:.82rem;color:var(--muted);margin:0;line-height:1.6}
+@media(max-width:600px){.impulse-steps{grid-template-columns:1fr}.step{border-right:none;border-bottom:1px solid var(--border)}.step:last-child{border-bottom:none}}
+
+/* ===== FUENTES APA ===== */
+.sources-list{display:flex;flex-direction:column;gap:1rem;margin-top:2rem}
+.source-item{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:1.3rem 1.5rem;transition:border-color .2s;
+}
+.source-item:hover{border-color:var(--violet)}
+.source-num{font-size:.65rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--violet);margin-bottom:.4rem}
+.source-item p{font-size:.84rem;color:#8fa5be;margin:0;line-height:1.75}
+.source-item a{color:var(--cyan);text-decoration:none;word-break:break-all}
+.source-item a:hover{text-decoration:underline}
+.source-item em{font-style:italic}
+
+/* ===== FOOTER ===== */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:4rem 1.5rem;text-align:center}
+.foot-inner{max-width:820px;margin:0 auto}
+.cetis-pill{
+  display:inline-block;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.25);
+  border-radius:99px;padding:.35rem 1.2rem;font-size:.72rem;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:1.5rem;
+}
+footer h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:.5rem}
+footer .sub{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem}
+.authors{display:flex;flex-wrap:wrap;justify-content:center;gap:.7rem;margin:1.5rem 0}
+.author{background:var(--card);border:1px solid var(--border);border-radius:99px;padding:.35rem 1rem;font-size:.83rem;color:var(--text);font-weight:500}
+.foot-note{font-size:.75rem;color:var(--dim);margin-top:1.5rem;line-height:1.8}
+
+/* ===== PULSE ===== */
+.pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--cyan);animation:pulseAnim 2s infinite;margin-right:.4rem;vertical-align:middle}
+@keyframes pulseAnim{0%,100%{box-shadow:0 0 0 0 rgba(56,189,248,.5)}50%{box-shadow:0 0 0 5px rgba(56,189,248,0)}}
+
+/* ===== TABS (enfermedades filter) ===== */
+.tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
+.tab-btn{
+  background:var(--card);border:1px solid var(--border);border-radius:99px;
+  padding:.35rem .9rem;font-size:.75rem;font-weight:600;color:var(--muted);
+  cursor:pointer;transition:all .2s;font-family:'Space Grotesk',sans-serif;
+}
+.tab-btn:hover{color:var(--text);border-color:var(--border2)}
+.tab-btn.active{background:rgba(56,189,248,.12);border-color:var(--cyan);color:var(--cyan)}
+
+/* ===== MISC ===== */
+@media(max-width:480px){
+  section{padding:3.5rem 0}
+  nav a{padding:.75rem .7rem;font-size:.68rem}
+}
+.hidden{display:none}
+</style>
 </head>
 <body>
 
-<!-- HEADER HERO -->
-<header>
-  <div class="brain-bg"></div>
-  <svg class="neural-canvas" viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
-    <!-- Neural network lines -->
-    <g stroke="#4fc3f7" stroke-width="0.8" fill="none" opacity="0.6">
-      <line x1="100" y1="150" x2="300" y2="250"/>
-      <line x1="300" y1="250" x2="500" y2="120"/>
-      <line x1="500" y1="120" x2="700" y2="300"/>
-      <line x1="700" y1="300" x2="900" y2="180"/>
-      <line x1="900" y1="180" x2="1100" y2="350"/>
-      <line x1="200" y1="400" x2="400" y2="500"/>
-      <line x1="400" y1="500" x2="600" y2="380"/>
-      <line x1="600" y1="380" x2="800" y2="550"/>
-      <line x1="800" y1="550" x2="1000" y2="420"/>
-      <line x1="150" y1="600" x2="350" y2="480"/>
-      <line x1="350" y1="480" x2="550" y2="620"/>
-      <line x1="300" y1="250" x2="400" y2="500"/>
-      <line x1="500" y1="120" x2="600" y2="380"/>
-      <line x1="700" y1="300" x2="800" y2="550"/>
-      <line x1="900" y1="180" x2="1000" y2="420"/>
+<!-- ══════════ HERO ══════════ -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <svg id="neurons" viewBox="0 0 1400 750" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <g stroke="#38bdf8" stroke-width=".7" fill="none">
+      <line x1="80" y1="120" x2="220" y2="200"/><line x1="220" y1="200" x2="410" y2="100"/>
+      <line x1="410" y1="100" x2="580" y2="260"/><line x1="580" y1="260" x2="780" y2="140"/>
+      <line x1="780" y1="140" x2="960" y2="300"/><line x1="960" y1="300" x2="1150" y2="160"/>
+      <line x1="1150" y1="160" x2="1320" y2="280"/><line x1="150" y1="380" x2="340" y2="480"/>
+      <line x1="340" y1="480" x2="530" y2="360"/><line x1="530" y1="360" x2="720" y2="520"/>
+      <line x1="720" y1="520" x2="910" y2="400"/><line x1="910" y1="400" x2="1100" y2="540"/>
+      <line x1="1100" y1="540" x2="1280" y2="430"/><line x1="100" y1="620" x2="290" y2="560"/>
+      <line x1="290" y1="560" x2="480" y2="680"/><line x1="480" y1="680" x2="670" y2="610"/>
+      <line x1="220" y1="200" x2="340" y2="480"/><line x1="410" y1="100" x2="530" y2="360"/>
+      <line x1="580" y1="260" x2="720" y2="520"/><line x1="780" y1="140" x2="910" y2="400"/>
+      <line x1="960" y1="300" x2="1100" y2="540"/>
     </g>
-    <g fill="#4fc3f7">
-      <circle cx="100" cy="150" r="4" opacity="0.8"/>
-      <circle cx="300" cy="250" r="5" opacity="0.9"/>
-      <circle cx="500" cy="120" r="4" opacity="0.7"/>
-      <circle cx="700" cy="300" r="6" opacity="0.9"/>
-      <circle cx="900" cy="180" r="4" opacity="0.7"/>
-      <circle cx="1100" cy="350" r="3" opacity="0.6"/>
-      <circle cx="200" cy="400" r="4" opacity="0.8"/>
-      <circle cx="400" cy="500" r="5" opacity="0.85"/>
-      <circle cx="600" cy="380" r="4" opacity="0.75"/>
-      <circle cx="800" cy="550" r="5" opacity="0.8"/>
-      <circle cx="1000" cy="420" r="4" opacity="0.7"/>
-      <circle cx="150" cy="600" r="3" opacity="0.6"/>
-      <circle cx="350" cy="480" r="4" opacity="0.7"/>
-      <circle cx="550" cy="620" r="3" opacity="0.65"/>
+    <g stroke="#818cf8" stroke-width=".5" fill="none">
+      <line x1="300" y1="180" x2="440" y2="350"/><line x1="650" y1="200" x2="810" y2="380"/>
+      <line x1="1000" y1="220" x2="1180" y2="410"/>
     </g>
-    <g fill="#7c83f7">
-      <circle cx="250" cy="180" r="3" opacity="0.6"/>
-      <circle cx="650" cy="450" r="4" opacity="0.7"/>
-      <circle cx="950" cy="520" r="3" opacity="0.6"/>
-      <circle cx="450" cy="320" r="3" opacity="0.65"/>
+    <g fill="#38bdf8">
+      <circle cx="80" cy="120" r="3.5"/><circle cx="220" cy="200" r="4.5"/>
+      <circle cx="410" cy="100" r="3.5"/><circle cx="580" cy="260" r="5"/>
+      <circle cx="780" cy="140" r="3.5"/><circle cx="960" cy="300" r="5.5"/>
+      <circle cx="1150" cy="160" r="3"/><circle cx="1320" cy="280" r="3.5"/>
+      <circle cx="150" cy="380" r="3.5"/><circle cx="340" cy="480" r="4.5"/>
+      <circle cx="530" cy="360" r="3.5"/><circle cx="720" cy="520" r="4.5"/>
+      <circle cx="910" cy="400" r="3.5"/><circle cx="1100" cy="540" r="4"/>
+      <circle cx="1280" cy="430" r="3.5"/><circle cx="100" cy="620" r="3"/>
+      <circle cx="290" cy="560" r="4"/><circle cx="480" cy="680" r="3"/>
+    </g>
+    <g fill="#a78bfa">
+      <circle cx="300" cy="180" r="3"/><circle cx="650" cy="200" r="3.5"/>
+      <circle cx="1000" cy="220" r="3"/><circle cx="440" cy="350" r="2.5"/>
+      <circle cx="810" cy="380" r="3"/><circle cx="1180" cy="410" r="2.5"/>
     </g>
   </svg>
 
-  <div class="content">
+  <div class="hero-inner">
     <p class="eyebrow">Biología · Sistema Nervioso · CETIS 128</p>
-    <h1>El Sistema <span>Nervioso</span></h1>
-    <p class="hero-sub">
-      Red compleja de células y nervios que controla, integra y coordina todas las funciones del cuerpo humano.
-    </p>
-    <div class="scroll-hint">
+    <h1 class="hero-title">El Sistema<br><em>Nervioso</em></h1>
+    <p class="hero-desc">La red más compleja del cuerpo humano: 86 mil millones de neuronas que controlan todo lo que somos, pensamos y sentimos.</p>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num">86B</div><div class="stat-label">Neuronas</div></div>
+      <div class="stat-item"><div class="stat-num">120 m/s</div><div class="stat-label">Velocidad impulso</div></div>
+      <div class="stat-item"><div class="stat-num">100T</div><div class="stat-label">Sinapsis</div></div>
+      <div class="stat-item"><div class="stat-num">12 pares</div><div class="stat-label">Nervios craneales</div></div>
+    </div>
+    <div class="scroll-cue">
       <span>Explorar</span>
-      <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
-        <path d="M8 4v16M2 14l6 6 6-6" stroke="#4fc3f7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <svg width="14" height="22" viewBox="0 0 14 22" fill="none"><path d="M7 3v16M1 13l6 6 6-6" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </div>
-</header>
+</section>
 
-<!-- NAV -->
+<!-- ══════════ NAV ══════════ -->
 <nav>
   <ul>
-    <li><a href="#que-es">¿Qué es?</a></li>
+    <li><a href="#intro">¿Qué es?</a></li>
     <li><a href="#divisiones">Divisiones</a></li>
-    <li><a href="#componentes">Componentes SNC</a></li>
+    <li><a href="#componentes">Componentes</a></li>
     <li><a href="#lobulos">Lóbulos</a></li>
-    <li><a href="#frontal">Lóbulo Frontal</a></li>
+    <li><a href="#frontal">L. Frontal</a></li>
+    <li><a href="#celulas">Células</a></li>
+    <li><a href="#sinapsis">Sinapsis</a></li>
+    <li><a href="#enfermedades">Enfermedades</a></li>
     <li><a href="#fuentes">Fuentes</a></li>
   </ul>
 </nav>
 
 <main>
 
-  <!-- QUÉ ES -->
-  <section id="que-es">
-    <p class="section-label"><span class="pulse-dot"></span>Introducción</p>
-    <h2>¿Qué es el Sistema Nervioso?</h2>
-    <div class="highlight-box">
-      <p>Es un sistema complejo formado por nervios y células que transportan mensajes hacia y desde el cerebro, la médula espinal y otras partes del cuerpo. Controla e integra las diferentes funciones corporales y mantiene la estabilidad y constancia de las variables internas de nuestro organismo.</p>
+<!-- ══════════ ¿QUÉ ES? ══════════ -->
+<section id="intro">
+  <p class="sec-label"><span class="pulse"></span>Introducción</p>
+  <h2 class="sec-title">¿Qué es el Sistema Nervioso?</h2>
+  <p class="sec-intro">El sistema nervioso es la red de comunicación más sofisticada del organismo humano. Recibe, procesa y transmite información del entorno y del propio cuerpo, coordinando respuestas voluntarias e involuntarias.</p>
+  <div class="hl-box">
+    <p>Es un sistema complejo formado por nervios y células que transportan mensajes hacia y desde el cerebro, la médula espinal y todas las partes del cuerpo. Controla e integra las diferentes funciones corporales y mantiene la estabilidad y constancia de las variables internas del organismo — un proceso conocido como <strong>homeostasis</strong>.</p>
+  </div>
+  <div class="two-col" style="gap:1.5rem;margin-top:1.5rem">
+    <div>
+      <p>El sistema nervioso humano es el resultado de millones de años de evolución. Está compuesto principalmente por dos tipos de células: las <strong>neuronas</strong>, encargadas de transmitir señales eléctricas y químicas, y las <strong>células gliales</strong>, que brindan soporte estructural, nutricional y de protección a las neuronas.</p>
+      <p>Su función principal es detectar cambios en el ambiente interno y externo (estímulos), evaluar esa información y generar respuestas adecuadas, como mover un músculo, liberar una hormona o modificar un proceso fisiológico.</p>
     </div>
-    <p>El sistema nervioso es el centro de control de todas las funciones voluntarias del cuerpo. Está formado principalmente por el <strong>cerebro</strong> y la <strong>médula espinal</strong>, que forman el sistema nervioso central, junto con una extensa red de nervios periféricos que se ramifican por todo el organismo.</p>
-    <p>Sus dos grandes divisiones son el <strong>Sistema Nervioso Central (SNC)</strong> y el <strong>Sistema Nervioso Periférico (SNP)</strong>.</p>
-  </section>
-
-  <!-- DIVISIONES -->
-  <section id="divisiones">
-    <p class="section-label">Clasificación</p>
-    <h2>Divisiones del Sistema Nervioso</h2>
-    <p>El sistema nervioso se organiza en dos grandes subsistemas que trabajan de manera integrada y coordinada.</p>
-    <div class="division-grid">
-      <div class="division-card snc-card">
-        <span class="tag">SNC</span>
-        <div class="accent-line"></div>
-        <h3>Sistema Nervioso Central</h3>
-        <p>Es el centro de control de todas las funciones voluntarias del cuerpo. Está formado por el <strong>cerebro</strong> y la <strong>médula espinal</strong>. Procesa la información recibida, elabora respuestas y coordina la actividad de todo el organismo.</p>
-        <p style="margin-top:1rem; font-size:0.85rem; color: #4fc3f7;">Sustancia gris × blanca</p>
-      </div>
-      <div class="division-card snp-card">
-        <span class="tag">SNP</span>
-        <div class="accent-line"></div>
-        <h3>Sistema Nervioso Periférico</h3>
-        <p>Está compuesto por los <strong>nervios craneales</strong> y espinales que conectan el SNC con el resto del cuerpo. Transmite señales sensoriales hacia el SNC y lleva órdenes motoras de regreso a músculos y órganos.</p>
-        <p style="margin-top:1rem; font-size:0.85rem; color: #a78bfa;">Bulbo raquídeo incluido</p>
-      </div>
+    <div>
+      <p>Desde el punto de vista anatómico, el sistema nervioso se divide en <strong>Sistema Nervioso Central (SNC)</strong> y <strong>Sistema Nervioso Periférico (SNP)</strong>. Desde el punto de vista funcional, se distinguen el <strong>sistema somático</strong> (control voluntario) y el <strong>sistema autónomo</strong> (control involuntario de órganos internos).</p>
+      <p>El sistema nervioso autónomo, a su vez, se subdivide en <strong>simpático</strong> (prepara al cuerpo para situaciones de estrés: "lucha o huida") y <strong>parasimpático</strong> (favorece el descanso y la digestión: "reposa y digiere").</p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- COMPONENTES SNC -->
-  <section id="componentes">
-    <p class="section-label">Sistema Nervioso Central</p>
-    <h2>Componentes Principales</h2>
-    <p>El SNC está integrado por estructuras especializadas, cada una con funciones vitales y únicas para el funcionamiento del organismo.</p>
-    <div class="components-grid">
-      <div class="comp-card">
-        <div class="comp-icon" style="background: rgba(79,195,247,0.12);">🧠</div>
-        <h3>Cerebro</h3>
-        <p>Procesa pensamientos, emociones, memoria y movimiento voluntario. Es la estructura más compleja del sistema nervioso.</p>
-      </div>
-      <div class="comp-card">
-        <div class="comp-icon" style="background: rgba(124,131,247,0.12);">🔗</div>
-        <h3>Médula Espinal</h3>
-        <p>Transmite señales entre el cerebro y el resto del cuerpo. También controla algunos reflejos de forma autónoma.</p>
-      </div>
-      <div class="comp-card">
-        <div class="comp-icon" style="background: rgba(167,139,250,0.12);">⚙️</div>
-        <h3>Tronco Encefálico</h3>
-        <p>Regula las funciones vitales como la respiración, la frecuencia cardíaca y la presión arterial. Conecta el cerebro con la médula espinal.</p>
-      </div>
-      <div class="comp-card">
-        <div class="comp-icon" style="background: rgba(255,224,102,0.12);">🎯</div>
-        <h3>Cerebelo</h3>
-        <p>Coordina el equilibrio, la postura y los movimientos precisos. Esencial para la coordinación motora fina.</p>
-      </div>
-      <div class="comp-card">
-        <div class="comp-icon" style="background: rgba(79,195,247,0.12);">🌉</div>
-        <h3>Puente (Protuberancia)</h3>
-        <p>Actúa como puente entre el cerebelo y el tronco encefálico, participando en la regulación de la respiración y el sueño.</p>
-      </div>
-      <div class="comp-card">
-        <div class="comp-icon" style="background: rgba(167,139,250,0.12);">🔵</div>
-        <h3>Corteza Cerebral</h3>
-        <p>Capa externa del cerebro que controla las funciones superiores: razonamiento, lenguaje, percepción sensorial y consciencia.</p>
-      </div>
+<!-- ══════════ DIVISIONES ══════════ -->
+<section id="divisiones">
+  <p class="sec-label">Clasificación</p>
+  <h2 class="sec-title">Divisiones del Sistema Nervioso</h2>
+  <p class="sec-intro">El sistema nervioso se organiza en dos grandes subsistemas anatómicos que colaboran de manera permanente e integrada.</p>
+  <div class="two-col">
+    <div class="div-card snc">
+      <span class="chip snc">SNC</span>
+      <div class="accent-bar" style="background:var(--cyan)"></div>
+      <h3>Sistema Nervioso Central</h3>
+      <p>Es el centro de mando de todas las funciones del organismo. Conformado por el <strong>encéfalo</strong> (cerebro, cerebelo y tronco encefálico) y la <strong>médula espinal</strong>. Está protegido por los huesos del cráneo y la columna vertebral, y rodeado por tres membranas llamadas <strong>meninges</strong> (duramadre, aracnoides y piamadre).</p>
+      <p>Recibe información sensorial, la procesa y genera respuestas motoras y cognitivas. La <strong>sustancia gris</strong> contiene los cuerpos celulares de las neuronas; la <strong>sustancia blanca</strong> está formada por los axones mielinizados que conectan regiones.</p>
+      <p>El SNC también está bañado por el <strong>líquido cefalorraquídeo</strong> (LCR), que actúa como amortiguador mecánico, elimina desechos metabólicos y regula la presión intracraneal.</p>
     </div>
-  </section>
+    <div class="div-card snp">
+      <span class="chip snp">SNP</span>
+      <div class="accent-bar" style="background:var(--purple)"></div>
+      <h3>Sistema Nervioso Periférico</h3>
+      <p>Comprende todos los nervios y ganglios fuera del encéfalo y la médula. Incluye <strong>12 pares de nervios craneales</strong> y <strong>31 pares de nervios espinales</strong>. Su función es conectar el SNC con los músculos, piel, órganos y sentidos.</p>
+      <p>Se divide en <strong>sistema somático</strong> (nervios sensoriales y motores voluntarios) y <strong>sistema autónomo</strong>. El sistema autónomo controla funciones involuntarias como la frecuencia cardíaca, la respiración, la digestión y la presión arterial.</p>
+      <p>Las fibras del SNP son <strong>aferentes</strong> (llevan información hacia el SNC) o <strong>eferentes</strong> (llevan órdenes desde el SNC hacia los órganos efectores).</p>
+    </div>
+  </div>
 
-  <!-- LÓBULOS -->
-  <section id="lobulos">
-    <p class="section-label">Anatomía Cerebral</p>
-    <h2>Lóbulos del Cerebro</h2>
-    <p>La corteza cerebral se divide en cuatro lóbulos principales, cada uno responsable de funciones específicas del procesamiento neurológico.</p>
-    <div class="lobulos-layout">
-      <!-- Brain diagram SVG -->
-      <div class="brain-diagram">
-        <svg viewBox="0 0 340 260" width="100%" xmlns="http://www.w3.org/2000/svg">
-          <!-- Brain outline -->
-          <ellipse cx="170" cy="120" rx="130" ry="95" fill="#1a2236" stroke="#243050" stroke-width="1.5"/>
-          <!-- Frontal lobe -->
-          <path d="M 60 120 Q 80 60 140 50 Q 170 45 170 85 Q 140 100 110 115 Z"
-                fill="rgba(255,224,102,0.18)" stroke="#ffe066" stroke-width="1.2"/>
-          <text x="95" y="88" fill="#ffe066" font-size="9" font-family="Space Grotesk" font-weight="700" text-anchor="middle">FRONTAL</text>
-          <!-- Parietal lobe -->
-          <path d="M 170 85 Q 200 75 230 90 Q 260 110 240 140 Q 200 130 170 130 Z"
-                fill="rgba(79,195,247,0.18)" stroke="#4fc3f7" stroke-width="1.2"/>
-          <text x="212" y="108" fill="#4fc3f7" font-size="9" font-family="Space Grotesk" font-weight="700" text-anchor="middle">PARIETAL</text>
-          <!-- Occipital lobe -->
-          <path d="M 240 140 Q 280 170 260 195 Q 230 210 200 200 Q 185 175 190 155 Z"
-                fill="rgba(167,139,250,0.18)" stroke="#a78bfa" stroke-width="1.2"/>
-          <text x="233" y="178" fill="#a78bfa" font-size="9" font-family="Space Grotesk" font-weight="700" text-anchor="middle">OCCIPITAL</text>
-          <!-- Temporal lobe -->
-          <path d="M 110 115 Q 140 130 170 130 Q 185 155 170 175 Q 130 185 100 165 Q 75 145 80 125 Z"
-                fill="rgba(124,131,247,0.18)" stroke="#7c83f7" stroke-width="1.2"/>
-          <text x="132" y="158" fill="#7c83f7" font-size="9" font-family="Space Grotesk" font-weight="700" text-anchor="middle">TEMPORAL</text>
-          <!-- Cerebellum -->
-          <ellipse cx="170" cy="215" rx="55" ry="28" fill="rgba(79,195,247,0.1)" stroke="#4fc3f7" stroke-width="1" stroke-dasharray="4,2"/>
-          <text x="170" y="219" fill="#4fc3f7" font-size="8" font-family="Space Grotesk" font-weight="600" text-anchor="middle">CEREBELO</text>
-          <!-- Brain stem -->
-          <rect x="150" y="195" width="40" height="35" rx="5" fill="rgba(255,224,102,0.1)" stroke="#ffe066" stroke-width="1" stroke-dasharray="4,2"/>
-          <text x="170" y="216" fill="#ffe066" font-size="7.5" font-family="Space Grotesk" font-weight="600" text-anchor="middle">TRONCO</text>
-          <!-- Dividing line -->
-          <line x1="170" y1="50" x2="170" y2="195" stroke="#243050" stroke-width="0.8" stroke-dasharray="3,3"/>
-        </svg>
-      </div>
+  <!-- Subdivisión autónomo -->
+  <div class="two-col" style="margin-top:1.2rem">
+    <div class="div-card" style="border-color:var(--border)">
+      <span class="chip" style="background:rgba(251,191,36,.12);color:var(--yellow)">Simpático</span>
+      <div class="accent-bar" style="background:var(--yellow)"></div>
+      <h3 style="font-size:1.2rem">Sistema Nervioso Simpático</h3>
+      <p>Prepara al cuerpo para situaciones de emergencia. Incrementa la frecuencia cardíaca, dilata las pupilas y los bronquios, redirige sangre a los músculos, inhibe la digestión y libera adrenalina. Respuesta "lucha o huida".</p>
+    </div>
+    <div class="div-card" style="border-color:var(--border)">
+      <span class="chip" style="background:rgba(52,211,153,.12);color:var(--green)">Parasimpático</span>
+      <div class="accent-bar" style="background:var(--green)"></div>
+      <h3 style="font-size:1.2rem">Sistema Nervioso Parasimpático</h3>
+      <p>Promueve el estado de calma y recuperación. Reduce la frecuencia cardíaca, contrae las pupilas, estimula la digestión y la producción de saliva, y favorece el descanso. Respuesta "reposa y digiere".</p>
+    </div>
+  </div>
+</section>
 
-      <div class="lobulos-list">
-        <div class="lobulo-item">
-          <div class="lobulo-dot" style="background:#ffe066;"></div>
-          <div>
-            <h4 style="color:#ffe066;">Lóbulo Frontal</h4>
-            <p>Centro de la personalidad. Controla el movimiento voluntario, la toma de decisiones, el lenguaje (área de Broca) y las funciones ejecutivas.</p>
-          </div>
+<!-- ══════════ COMPONENTES SNC ══════════ -->
+<section id="componentes">
+  <p class="sec-label">Sistema Nervioso Central</p>
+  <h2 class="sec-title">Componentes del Encéfalo y la Médula</h2>
+  <p class="sec-intro">El encéfalo adulto pesa aproximadamente 1,400 gramos y consume el 20% de la energía corporal, aunque representa solo el 2% del peso total del cuerpo.</p>
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-ico" style="background:rgba(56,189,248,.1)">🧠</div>
+      <h3>Cerebro (Telencéfalo)</h3>
+      <p>La estructura más voluminosa del encéfalo. Dividido en dos hemisferios (izquierdo y derecho) conectados por el <em>cuerpo calloso</em>. Procesa el pensamiento, la memoria episódica y semántica, las emociones, la percepción sensorial y el movimiento voluntario. Contiene los cuatro lóbulos: frontal, parietal, temporal y occipital.</p>
+    </div>
+    <div class="comp-card">
+      <div class="comp-ico" style="background:rgba(129,140,248,.1)">⚙️</div>
+      <h3>Cerebelo</h3>
+      <p>Situado en la fosa craneal posterior. Coordina el equilibrio, la postura y los movimientos finos y precisos. Recibe información de los músculos, articulaciones y oído interno para afinar el movimiento en tiempo real. Daños en el cerebelo producen <em>ataxia</em> (movimientos descoordinados).</p>
+    </div>
+    <div class="comp-card">
+      <div class="comp-ico" style="background:rgba(167,139,250,.1)">🔗</div>
+      <h3>Tronco Encefálico</h3>
+      <p>Conecta el encéfalo con la médula espinal. Compuesto por el <em>mesencéfalo</em>, la <em>protuberancia (puente)</em> y el <em>bulbo raquídeo</em>. Regula funciones vitales automáticas: respiración, frecuencia cardíaca, presión arterial, deglución y ciclos de sueño-vigilia.</p>
+    </div>
+    <div class="comp-card">
+      <div class="comp-ico" style="background:rgba(251,191,36,.1)">🌐</div>
+      <h3>Diencéfalo</h3>
+      <p>Ubicado entre el cerebro y el tronco. Incluye el <em>tálamo</em> (estación de relevo sensorial), el <em>hipotálamo</em> (regula temperatura, hambre, sed y hormonas), la <em>hipófisis</em> y el <em>epitálamo</em> con la glándula pineal (ritmos circadianos).</p>
+    </div>
+    <div class="comp-card">
+      <div class="comp-ico" style="background:rgba(52,211,153,.1)">🔄</div>
+      <h3>Médula Espinal</h3>
+      <p>Cordón nervioso de ~45 cm que recorre el canal vertebral. Transmite impulsos sensoriales al cerebro y órdenes motoras hacia los músculos. También gestiona reflejos medulares independientes del cerebro, como el reflejo patelar. Se divide en segmentos: cervical, torácico, lumbar, sacro y coccígeo.</p>
+    </div>
+    <div class="comp-card">
+      <div class="comp-ico" style="background:rgba(251,146,60,.1)">🧩</div>
+      <h3>Corteza Cerebral</h3>
+      <p>Capa externa del cerebro de 2–4 mm de grosor y ~2,500 cm² de superficie (muy plegada). Contiene 6 capas de neuronas. Es la sede de las funciones cognitivas superiores: razonamiento abstracto, lenguaje, creatividad, consciencia y toma de decisiones complejas.</p>
+    </div>
+    <div class="comp-card">
+      <div class="comp-ico" style="background:rgba(56,189,248,.1)">💧</div>
+      <h3>Sistema Límbico</h3>
+      <p>Conjunto de estructuras (hipocampo, amígdala, cíngulo, hipotálamo) involucradas en las emociones, la memoria a largo plazo y la motivación. La <em>amígdala</em> procesa el miedo y la agresión; el <em>hipocampo</em> consolida recuerdos y permite la navegación espacial.</p>
+    </div>
+    <div class="comp-card">
+      <div class="comp-ico" style="background:rgba(129,140,248,.1)">🔵</div>
+      <h3>Ganglios Basales</h3>
+      <p>Grupo de núcleos subcorticales (cuerpo estriado, globo pálido, sustancia negra) que regulan el inicio y la inhibición de movimientos, el aprendizaje de hábitos y la motivación. Su disfunción es central en enfermedades como el Parkinson y la enfermedad de Huntington.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LÓBULOS CEREBRALES ══════════ -->
+<section id="lobulos">
+  <p class="sec-label">Anatomía Cerebral</p>
+  <h2 class="sec-title">Lóbulos del Cerebro</h2>
+  <p class="sec-intro">La corteza cerebral se organiza en cuatro lóbulos principales separados por surcos (cisuras). Cada uno alberga áreas funcionales especializadas.</p>
+  <div class="brain-layout">
+
+    <!-- BRAIN SVG REALISTA -->
+    <div class="brain-wrap">
+      <svg viewBox="0 0 420 340" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer skull shadow -->
+        <ellipse cx="210" cy="155" rx="175" ry="128" fill="rgba(56,189,248,.03)" stroke="var(--border)" stroke-width="1"/>
+
+        <!-- Brain silhouette base -->
+        <path d="
+          M 100 80
+          C 70 60, 50 85, 55 115
+          C 40 130, 38 160, 55 178
+          C 45 200, 55 230, 80 240
+          C 95 258, 125 265, 150 260
+          C 170 275, 200 278, 220 270
+          C 245 280, 275 272, 295 255
+          C 320 248, 345 230, 348 205
+          C 368 190, 368 165, 355 150
+          C 368 130, 360 105, 340 95
+          C 330 68, 300 55, 270 65
+          C 250 52, 220 48, 195 58
+          C 170 48, 140 55, 120 68
+          Z
+        " fill="var(--card2)" stroke="var(--border2)" stroke-width="1.5"/>
+
+        <!-- FRONTAL LOBE -->
+        <path d="
+          M 100 80 C 90 70, 80 90, 80 115
+          C 75 130, 80 150, 95 160
+          C 110 170, 135 168, 155 160
+          C 175 152, 185 138, 185 120
+          C 185 100, 175 82, 160 75
+          C 145 65, 120 68, 100 80 Z
+        " fill="rgba(251,191,36,.22)" stroke="#fbbf24" stroke-width="1.8"/>
+        <text x="127" y="122" fill="#fbbf24" font-size="11" font-family="Space Grotesk" font-weight="800" text-anchor="middle">FRONTAL</text>
+
+        <!-- PARIETAL LOBE -->
+        <path d="
+          M 185 120 C 185 100, 195 85, 215 80
+          C 240 72, 275 78, 295 95
+          C 315 112, 318 138, 305 158
+          C 295 172, 270 178, 248 172
+          C 225 166, 200 152, 185 120 Z
+        " fill="rgba(56,189,248,.22)" stroke="#38bdf8" stroke-width="1.8"/>
+        <text x="252" y="127" fill="#38bdf8" font-size="10.5" font-family="Space Grotesk" font-weight="800" text-anchor="middle">PARIETAL</text>
+
+        <!-- OCCIPITAL LOBE -->
+        <path d="
+          M 295 158 C 315 150, 345 158, 355 178
+          C 362 198, 350 225, 330 238
+          C 308 250, 280 248, 262 232
+          C 244 216, 240 192, 248 172
+          C 258 178, 280 185, 295 158 Z
+        " fill="rgba(167,139,250,.22)" stroke="#a78bfa" stroke-width="1.8"/>
+        <text x="306" y="205" fill="#a78bfa" font-size="10" font-family="Space Grotesk" font-weight="800" text-anchor="middle">OCCIPITAL</text>
+
+        <!-- TEMPORAL LOBE -->
+        <path d="
+          M 80 155 C 65 168, 60 195, 70 218
+          C 82 240, 108 252, 135 248
+          C 160 244, 185 228, 195 205
+          C 205 185, 200 165, 185 158
+          C 165 152, 130 165, 95 160 Z
+        " fill="rgba(129,140,248,.22)" stroke="#818cf8" stroke-width="1.8"/>
+        <text x="130" y="210" fill="#818cf8" font-size="10.5" font-family="Space Grotesk" font-weight="800" text-anchor="middle">TEMPORAL</text>
+
+        <!-- INSULA (faint, inside) -->
+        <ellipse cx="190" cy="168" rx="22" ry="16" fill="rgba(52,211,153,.12)" stroke="#34d399" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="190" y="172" fill="#34d399" font-size="7.5" font-family="Space Grotesk" font-weight="700" text-anchor="middle">ÍNSULA</text>
+
+        <!-- CORPUS CALLOSUM hint -->
+        <path d="M 140 148 Q 190 136 240 148" stroke="var(--muted)" stroke-width="1" fill="none" stroke-dasharray="4,3" opacity=".5"/>
+
+        <!-- SULCI / GYRI lines for realism -->
+        <path d="M 118 95 Q 135 108 148 100" stroke="#fbbf24" stroke-width=".8" fill="none" opacity=".4"/>
+        <path d="M 130 82 Q 152 90 165 85" stroke="#fbbf24" stroke-width=".8" fill="none" opacity=".3"/>
+        <path d="M 210 88 Q 235 98 255 93" stroke="#38bdf8" stroke-width=".8" fill="none" opacity=".4"/>
+        <path d="M 302 168 Q 318 185 330 180" stroke="#a78bfa" stroke-width=".8" fill="none" opacity=".4"/>
+        <path d="M 95 178 Q 112 192 108 205" stroke="#818cf8" stroke-width=".8" fill="none" opacity=".4"/>
+        <path d="M 130 225 Q 155 238 175 230" stroke="#818cf8" stroke-width=".8" fill="none" opacity=".35"/>
+
+        <!-- Central sulcus -->
+        <path d="M 182 76 Q 188 115 183 158" stroke="rgba(255,255,255,.25)" stroke-width="1.2" fill="none"/>
+        <text x="168" y="72" fill="rgba(255,255,255,.4)" font-size="7" font-family="Space Grotesk" text-anchor="middle">Cisura central</text>
+
+        <!-- Lateral fissure -->
+        <path d="M 80 155 Q 130 148 185 158" stroke="rgba(255,255,255,.2)" stroke-width="1.2" fill="none"/>
+
+        <!-- CEREBELLUM -->
+        <ellipse cx="210" cy="290" rx="72" ry="34" fill="rgba(56,189,248,.1)" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="5,2"/>
+        <!-- Cerebellum folds -->
+        <line x1="155" y1="290" x2="265" y2="290" stroke="#38bdf8" stroke-width=".6" opacity=".4"/>
+        <line x1="160" y1="283" x2="260" y2="283" stroke="#38bdf8" stroke-width=".5" opacity=".3"/>
+        <line x1="160" y1="297" x2="260" y2="297" stroke="#38bdf8" stroke-width=".5" opacity=".3"/>
+        <text x="210" y="295" fill="#38bdf8" font-size="10" font-family="Space Grotesk" font-weight="700" text-anchor="middle">CEREBELO</text>
+
+        <!-- BRAIN STEM -->
+        <rect x="182" y="252" width="56" height="42" rx="8" fill="rgba(251,191,36,.1)" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="4,2"/>
+        <text x="210" y="270" fill="#fbbf24" font-size="8.5" font-family="Space Grotesk" font-weight="700" text-anchor="middle">TRONCO</text>
+        <text x="210" y="282" fill="#fbbf24" font-size="8.5" font-family="Space Grotesk" font-weight="700" text-anchor="middle">ENCEFÁLICO</text>
+
+        <!-- Labels arrows (small) -->
+        <line x1="262" y1="250" x2="285" y2="235" stroke="#a78bfa" stroke-width=".8" opacity=".5"/>
+        <text x="308" y="232" fill="#a78bfa" font-size="8" font-family="Space Grotesk" text-anchor="middle" opacity=".8">Lóbulo occ.</text>
+      </svg>
+    </div>
+
+    <!-- LÓBULOS LIST -->
+    <div class="lobulo-list">
+      <div class="lobulo-row" style="border-color:rgba(251,191,36,.25)">
+        <div class="ldot" style="background:#fbbf24"></div>
+        <div>
+          <h4 style="color:#fbbf24">Lóbulo Frontal</h4>
+          <p>Centro de la personalidad y funciones ejecutivas. Alberga la corteza motora primaria (control del movimiento voluntario) y el área de Broca (producción del lenguaje). Responsable de la planificación, toma de decisiones, control de impulsos y comportamiento social.</p>
         </div>
-        <div class="lobulo-item">
-          <div class="lobulo-dot" style="background:#4fc3f7;"></div>
-          <div>
-            <h4 style="color:#4fc3f7;">Lóbulo Parietal</h4>
-            <p>Procesa la información sensorial del tacto, temperatura, dolor y posición corporal. Integra información espacial.</p>
-          </div>
+      </div>
+      <div class="lobulo-row" style="border-color:rgba(56,189,248,.25)">
+        <div class="ldot" style="background:#38bdf8"></div>
+        <div>
+          <h4 style="color:#38bdf8">Lóbulo Parietal</h4>
+          <p>Alberga la corteza somatosensorial primaria. Procesa información táctil, temperatura, dolor, presión y posición del cuerpo (propiocepción). También integra información multisensorial para la orientación espacial y el lenguaje matemático.</p>
         </div>
-        <div class="lobulo-item">
-          <div class="lobulo-dot" style="background:#7c83f7;"></div>
-          <div>
-            <h4 style="color:#7c83f7;">Lóbulo Temporal</h4>
-            <p>Involucrado en la audición, el lenguaje (área de Wernicke), la memoria y el reconocimiento de objetos y rostros.</p>
-          </div>
+      </div>
+      <div class="lobulo-row" style="border-color:rgba(129,140,248,.25)">
+        <div class="ldot" style="background:#818cf8"></div>
+        <div>
+          <h4 style="color:#818cf8">Lóbulo Temporal</h4>
+          <p>Contiene la corteza auditiva primaria. Procesa sonidos, música y lenguaje (área de Wernicke para comprensión). Fundamental para la memoria declarativa (hipocampo), el reconocimiento de caras y objetos, y las emociones (amígdala).</p>
         </div>
-        <div class="lobulo-item">
-          <div class="lobulo-dot" style="background:#a78bfa;"></div>
-          <div>
-            <h4 style="color:#a78bfa;">Lóbulo Occipital</h4>
-            <p>Centro primario del procesamiento visual. Interpreta la información que llega desde los ojos.</p>
-          </div>
+      </div>
+      <div class="lobulo-row" style="border-color:rgba(167,139,250,.25)">
+        <div class="ldot" style="background:#a78bfa"></div>
+        <div>
+          <h4 style="color:#a78bfa">Lóbulo Occipital</h4>
+          <p>Sede de la corteza visual primaria (área V1). Recibe y procesa toda la información proveniente de los ojos: color, forma, movimiento, profundidad y reconocimiento de objetos. Las lesiones en esta zona causan ceguera cortical.</p>
+        </div>
+      </div>
+      <div class="lobulo-row" style="border-color:rgba(52,211,153,.2)">
+        <div class="ldot" style="background:#34d399"></div>
+        <div>
+          <h4 style="color:#34d399">Ínsula</h4>
+          <p>Lóbulo "escondido" en la cisura lateral. Implicado en la consciencia del cuerpo (interocepción), el gusto, el dolor visceral, las emociones sociales y la empatía.</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- LÓBULO FRONTAL -->
-  <section id="frontal">
-    <p class="section-label">Lóbulo Frontal</p>
-    <h2>Centro de la Personalidad</h2>
-    <p>El lóbulo frontal es considerado la sede de la personalidad y las funciones cognitivas más complejas del ser humano. Alberga la corteza motora y el área de Broca, esencial para la producción del lenguaje.</p>
-    <div class="frontal-grid">
-      <div class="frontal-item">
-        <h4>🏃 Control Motor</h4>
-        <p>Dirige el movimiento voluntario a través de la corteza motora primaria.</p>
-      </div>
-      <div class="frontal-item">
-        <h4>🧭 Toma de Decisiones</h4>
-        <p>Evalúa opciones y consecuencias para orientar el comportamiento.</p>
-      </div>
-      <div class="frontal-item">
-        <h4>🔧 Resolución de Problemas</h4>
-        <p>Planifica, organiza y ejecuta estrategias para resolver situaciones complejas.</p>
-      </div>
-      <div class="frontal-item">
-        <h4>❤️ Control Emocional</h4>
-        <p>Regula emociones y conducta social, modulando impulsos y respuestas afectivas.</p>
-      </div>
-      <div class="frontal-item">
-        <h4>🗣️ Lenguaje (Broca)</h4>
-        <p>El área de Broca, en el frontal inferior izquierdo, controla la producción del habla.</p>
-      </div>
-      <div class="frontal-item">
-        <h4>🧩 Funciones Ejecutivas</h4>
-        <p>Memoria de trabajo, flexibilidad cognitiva y control de la atención voluntaria.</p>
-      </div>
+<!-- ══════════ LÓBULO FRONTAL ══════════ -->
+<section id="frontal">
+  <p class="sec-label">Lóbulo Frontal</p>
+  <h2 class="sec-title">Centro de la Personalidad Humana</h2>
+  <p class="sec-intro">El lóbulo frontal ocupa un tercio de la corteza cerebral y es la región más grande del cerebro. Es exclusivo de los primates superiores y alcanza su máximo desarrollo en los humanos. Su maduración completa ocurre alrededor de los 25 años.</p>
+  <div class="hl-box">
+    <p>El famoso caso de <strong>Phineas Gage</strong> (1848) —un obrero cuya barra de hierro atravesó su lóbulo frontal en un accidente— demostró por primera vez que esta región controla la personalidad y el comportamiento social. Gage sobrevivió, pero su carácter cambió radicalmente.</p>
+  </div>
+  <div class="frontal-grid">
+    <div class="frontal-card">
+      <h4>🏃 Control Motor Voluntario</h4>
+      <p>La corteza motora primaria (área 4 de Brodmann) dirige los movimientos precisos. La corteza premotora planifica y secuencia acciones complejas.</p>
     </div>
-  </section>
+    <div class="frontal-card">
+      <h4>🧭 Toma de Decisiones</h4>
+      <p>La corteza prefrontal evalúa consecuencias a largo plazo, pondera riesgos y beneficios, y orienta el comportamiento hacia metas abstractas.</p>
+    </div>
+    <div class="frontal-card">
+      <h4>🔧 Resolución de Problemas</h4>
+      <p>Planificación estratégica, pensamiento abstracto, flexibilidad cognitiva y razonamiento lógico dependen de la corteza prefrontal dorsolateral.</p>
+    </div>
+    <div class="frontal-card">
+      <h4>❤️ Control Emocional</h4>
+      <p>La corteza orbitofrontal y la cingulada anterior regulan respuestas emocionales, empatía, comportamiento social apropiado e inhibición de impulsos.</p>
+    </div>
+    <div class="frontal-card">
+      <h4>🗣️ Área de Broca</h4>
+      <p>Área 44 y 45 de Brodmann, en el hemisferio izquierdo. Controla la producción y articulación del lenguaje oral y escrito. Su lesión causa afasia de Broca (habla entrecortada).</p>
+    </div>
+    <div class="frontal-card">
+      <h4>🎯 Memoria de Trabajo</h4>
+      <p>Mantiene activa información temporal para usarla en tareas en curso. Fundamental para el aprendizaje, la comprensión lectora y el razonamiento.</p>
+    </div>
+    <div class="frontal-card">
+      <h4>👁️ Campo Visual Frontal</h4>
+      <p>Área 8 de Brodmann. Controla los movimientos voluntarios de los ojos (sacadas oculares) para dirigir la atención visual.</p>
+    </div>
+    <div class="frontal-card">
+      <h4>🧬 Personalidad e Identidad</h4>
+      <p>Integra experiencias pasadas, valores, normas sociales y estados internos para construir y mantener la identidad personal a lo largo del tiempo.</p>
+    </div>
+  </div>
+</section>
 
-  <!-- FUENTES -->
-  <section id="fuentes">
-    <p class="section-label">Bibliografía</p>
-    <h2>Fuentes Consultadas</h2>
-    <p>Este trabajo se apoyó en fuentes académicas y especializadas en neurociencia y anatomía del sistema nervioso.</p>
-    <div class="sources-grid">
-      <a class="source-card" href="https://www.kenhub.com" target="_blank" rel="noopener">
-        <p class="src-label">Kenhub</p>
-        <p>Atlas de anatomía humana — Sistema nervioso central y periférico</p>
-      </a>
-      <a class="source-card" href="https://www.geino.es" target="_blank" rel="noopener">
-        <p class="src-label">GEINO</p>
-        <p>Grupo Español de Investigación en Neurooncología — Recursos educativos</p>
-      </a>
-      <a class="source-card" href="https://www.neurocirugiatorre.com" target="_blank" rel="noopener">
-        <p class="src-label">Neurocirugía de la Torre</p>
-        <p>Guías clínicas sobre estructura y función del sistema nervioso</p>
-      </a>
-      <a class="source-card" href="https://books.google.com.mx/books?id=yiHHCZmekJsC" target="_blank" rel="noopener">
-        <p class="src-label">Google Libros</p>
-        <p>Sistema nervioso — Texto académico universitario</p>
-      </a>
-      <a class="source-card" href="https://books.google.com" target="_blank" rel="noopener">
-        <p class="src-label">Víctor Manuel Alcaraz</p>
-        <p>Estructura y función del sistema nervioso — Google Libros</p>
-      </a>
-      <a class="source-card" href="https://books.google.com" target="_blank" rel="noopener">
-        <p class="src-label">David S. Butler</p>
-        <p>Movilización del sistema nervioso — Google Libros</p>
-      </a>
-      <a class="source-card" href="https://scholar.google.com" target="_blank" rel="noopener">
-        <p class="src-label">Google Académico</p>
-        <p>Artículos científicos y publicaciones sobre el sistema nervioso</p>
-      </a>
+<!-- ══════════ CÉLULAS NERVIOSAS ══════════ -->
+<section id="celulas">
+  <p class="sec-label">Histología</p>
+  <h2 class="sec-title">Células del Sistema Nervioso</h2>
+  <p class="sec-intro">El sistema nervioso está formado por dos grandes tipos celulares: las neuronas (transmisión de señales) y las células gliales (soporte y mantenimiento).</p>
+  <div class="cell-grid">
+    <div class="cell-card">
+      <div class="cell-title">🔬 Neurona</div>
+      <p>Unidad funcional del sistema nervioso. Posee un <em>cuerpo celular (soma)</em>, <em>dendritas</em> (reciben señales entrantes) y un <em>axón</em> (envía señales salientes). Los axones pueden medir desde micrómetros hasta más de 1 metro. Se clasifican en sensoriales, motoras e interneuronas.</p>
     </div>
-  </section>
+    <div class="cell-card">
+      <div class="cell-title">🛡️ Astrocitos</div>
+      <p>La célula glial más abundante. Nutre a las neuronas, forma la barrera hematoencefálica, regula el ambiente extracelular (K⁺, pH, glutamato) y participa en la sinapsis tripartita. Son clave en la reparación tras lesiones cerebrales.</p>
+    </div>
+    <div class="cell-card">
+      <div class="cell-title">⚡ Células de Schwann</div>
+      <p>En el SNP, forman la <em>vaina de mielina</em> alrededor de los axones. Esta vaina acelera la conducción nerviosa mediante el salto del impulso de un <em>nodo de Ranvier</em> al siguiente (conducción saltatoria). Velocidades hasta 120 m/s.</p>
+    </div>
+    <div class="cell-card">
+      <div class="cell-title">🔲 Oligodendrocitos</div>
+      <p>Equivalente de las células de Schwann en el SNC. Un solo oligodendrocito puede mielinar hasta 50 segmentos axónicos diferentes. Su destrucción en esclerosis múltiple provoca fallos en la conducción nerviosa.</p>
+    </div>
+    <div class="cell-card">
+      <div class="cell-title">🛡️ Microglía</div>
+      <p>Células inmunes residentes del SNC. Vigilan constantemente el tejido nervioso, eliminan patógenos y células dañadas por fagocitosis. Se activan ante inflamación, infección o lesión. Relacionadas con enfermedades neurodegenerativas.</p>
+    </div>
+    <div class="cell-card">
+      <div class="cell-title">💧 Células Ependimarias</div>
+      <p>Revisten los ventrículos cerebrales y el canal central de la médula. Producen y circulan el <em>líquido cefalorraquídeo (LCR)</em>, que protege el SNC de traumatismos y elimina productos de desecho metabólico.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SINAPSIS ══════════ -->
+<section id="sinapsis">
+  <p class="sec-label">Neurofisiología</p>
+  <h2 class="sec-title">El Impulso Nervioso y la Sinapsis</h2>
+  <p class="sec-intro">La comunicación neuronal ocurre mediante señales eléctricas (potenciales de acción) y señales químicas (neurotransmisores). El proceso se desarrolla en pasos secuenciales precisos.</p>
+  <div class="impulse-steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h4>Estímulo</h4>
+      <p>Un estímulo físico, químico o eléctrico llega a la membrana neuronal y despolariza parcialmente la célula.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h4>Potencial de Acción</h4>
+      <p>Si el estímulo supera el umbral, se genera un potencial de acción: Na⁺ entra masivamente al interior (+40 mV). Principio de "todo o nada".</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h4>Propagación</h4>
+      <p>El potencial se propaga a lo largo del axón. En fibras mielinizadas, salta entre nodos de Ranvier (conducción saltatoria), aumentando la velocidad.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h4>Liberación Sináptica</h4>
+      <p>Al llegar al terminal axónico, el Ca²⁺ entra y desencadena la fusión de vesículas sinápticas con la membrana, liberando neurotransmisores al espacio sináptico.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <h4>Recepción</h4>
+      <p>Los neurotransmisores se unen a receptores específicos en la neurona postsináptica, generando un potencial postsináptico excitador (EPSP) o inhibidor (IPSP).</p>
+    </div>
+    <div class="step">
+      <div class="step-num">06</div>
+      <h4>Recaptación</h4>
+      <p>Los neurotransmisores son recaptados por la neurona presináptica, degradados por enzimas o se difunden. El sistema regresa a su estado de reposo.</p>
+    </div>
+  </div>
+  <div style="margin-top:2rem">
+    <p class="sec-label" style="margin-bottom:.8rem"><span class="pulse"></span>Principales Neurotransmisores</p>
+    <div class="comp-grid" style="margin-top:0">
+      <div class="comp-card"><div class="comp-ico" style="background:rgba(251,191,36,.1)">⚡</div><h3>Dopamina</h3><p>Regula el placer, la motivación, el movimiento y el aprendizaje por recompensa. Implicada en Parkinson (déficit) y esquizofrenia (exceso).</p></div>
+      <div class="comp-card"><div class="comp-ico" style="background:rgba(52,211,153,.1)">😊</div><h3>Serotonina</h3><p>Regula el estado de ánimo, el sueño, el apetito y la temperatura corporal. Déficit asociado a depresión. Los ISRS actúan sobre este sistema.</p></div>
+      <div class="comp-card"><div class="comp-ico" style="background:rgba(56,189,248,.1)">🎯</div><h3>Acetilcolina</h3><p>Neurotransmisor de la unión neuromuscular. Fundamental para la memoria, el aprendizaje y la contracción muscular. Disminuye en el Alzheimer.</p></div>
+      <div class="comp-card"><div class="comp-ico" style="background:rgba(248,113,113,.1)">🔴</div><h3>Glutamato</h3><p>Principal neurotransmisor excitador del SNC. Esencial para la potenciación a largo plazo (LTP), base molecular de la memoria y el aprendizaje.</p></div>
+      <div class="comp-card"><div class="comp-ico" style="background:rgba(167,139,250,.1)">🟣</div><h3>GABA</h3><p>Principal neurotransmisor inhibidor del SNC. Reduce la excitabilidad neuronal. Su déficit se asocia a ansiedad y epilepsia. Las benzodiacepinas potencian su acción.</p></div>
+      <div class="comp-card"><div class="comp-ico" style="background:rgba(251,146,60,.1)">🟠</div><h3>Noradrenalina</h3><p>Regula la atención, la alerta, la respuesta al estrés y el estado de ánimo. Implicada en TDAH y trastornos de ansiedad.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ENFERMEDADES ══════════ -->
+<section id="enfermedades">
+  <p class="sec-label">Patología Neurológica</p>
+  <h2 class="sec-title">Enfermedades del Sistema Nervioso</h2>
+  <p class="sec-intro">Las enfermedades del sistema nervioso afectan a más de 1,000 millones de personas en el mundo según la OMS, siendo una de las principales causas de discapacidad y muerte.</p>
+
+  <div class="tabs" id="disease-tabs">
+    <button class="tab-btn active" onclick="filterDiseases('all',this)">Todas</button>
+    <button class="tab-btn" onclick="filterDiseases('neuro',this)">Neurodegenerativas</button>
+    <button class="tab-btn" onclick="filterDiseases('vasc',this)">Vasculares</button>
+    <button class="tab-btn" onclick="filterDiseases('psiq',this)">Psiquiátricas</button>
+    <button class="tab-btn" onclick="filterDiseases('auto',this)">Autoinmunes</button>
+    <button class="tab-btn" onclick="filterDiseases('infec',this)">Infecciosas</button>
+  </div>
+
+  <div class="disease-grid" id="disease-grid">
+
+    <!-- NEURODEGENERATIVAS -->
+    <div class="disease-card" data-cat="neuro">
+      <span class="disease-tag tag-neuro">Neurodegenerativa</span>
+      <h3>Enfermedad de Alzheimer</h3>
+      <p>La demencia más frecuente (60-70% de los casos). Se caracteriza por la acumulación de <strong>placas de beta-amiloide</strong> y <strong>ovillos de tau</strong> en la corteza cerebral, que destruyen neuronas progresivamente.</p>
+      <p><strong>Síntomas:</strong> Pérdida de memoria reciente, confusión, desorientación, dificultad para el lenguaje y, en fases avanzadas, incapacidad funcional total.</p>
+      <p><strong>Afectación:</strong> Principalmente hipocampo y corteza asociativa. El déficit de acetilcolina es central.</p>
+    </div>
+
+    <div class="disease-card" data-cat="neuro">
+      <span class="disease-tag tag-neuro">Neurodegenerativa</span>
+      <h3>Enfermedad de Parkinson</h3>
+      <p>Segunda enfermedad neurodegenerativa más común. Producida por la pérdida de neuronas dopaminérgicas en la <strong>sustancia negra</strong> del mesencéfalo, afectando los ganglios basales.</p>
+      <p><strong>Síntomas clásicos:</strong> Temblor en reposo, rigidez muscular, bradicinesia (lentitud), inestabilidad postural. También síntomas no motores: depresión, trastornos del sueño, estreñimiento.</p>
+      <p><strong>Tratamiento:</strong> Levodopa (precursor de dopamina), agonistas dopaminérgicos, estimulación cerebral profunda.</p>
+    </div>
+
+    <div class="disease-card" data-cat="neuro">
+      <span class="disease-tag tag-neuro">Neurodegenerativa</span>
+      <h3>ELA (Esclerosis Lateral Amiotrófica)</h3>
+      <p>Destruye progresivamente las <strong>neuronas motoras</strong> superiores e inferiores. Causa debilidad y atrofia muscular progresiva. No afecta la cognición (en la mayoría de casos).</p>
+      <p><strong>Síntomas:</strong> Debilidad en extremidades, disartria (dificultad para hablar), disfagia, insuficiencia respiratoria.</p>
+      <p><strong>Pronóstico:</strong> Generalmente fatal en 2-5 años. Stephen Hawking vivió con ELA por más de 50 años (caso excepcional).</p>
+    </div>
+
+    <div class="disease-card" data-cat="neuro">
+      <span class="disease-tag tag-neuro">Neurodegenerativa</span>
+      <h3>Enfermedad de Huntington</h3>
+      <p>Trastorno hereditario autosómico dominante causado por una <strong>expansión de repeticiones CAG</strong> en el gen HTT (cromosoma 4). Destruye neuronas en el <em>estriado</em>.</p>
+      <p><strong>Síntomas:</strong> Movimientos involuntarios (corea), deterioro cognitivo progresivo y trastornos psiquiátricos. Inicio habitualmente entre los 30-50 años.</p>
+    </div>
+
+    <!-- VASCULARES -->
+    <div class="disease-card" data-cat="vasc">
+      <span class="disease-tag tag-vasc">Vascular</span>
+      <h3>Accidente Cerebrovascular (ACV)</h3>
+      <p>Emergencia médica: interrupción del flujo sanguíneo al cerebro. Puede ser <strong>isquémico</strong> (obstrucción por trombo o émbolo, 85%) o <strong>hemorrágico</strong> (ruptura de un vaso, 15%).</p>
+      <p><strong>Síntomas FAST:</strong> Face (asimetría facial), Arms (debilidad en brazo), Speech (dificultad al hablar), Time (llamar emergencias urgente).</p>
+      <p><strong>Consecuencias:</strong> Parálisis, afasia, alteraciones cognitivas. Primera causa de discapacidad adquirida en adultos.</p>
+    </div>
+
+    <div class="disease-card" data-cat="vasc">
+      <span class="disease-tag tag-vasc">Vascular</span>
+      <h3>Migraña</h3>
+      <p>Trastorno neurológico crónico que afecta al 15% de la población mundial. Implica activación del nervio trigémino y vasodilatación de arterias meníngeas.</p>
+      <p><strong>Síntomas:</strong> Cefalea pulsátil intensa (generalmente unilateral), náuseas, fotofobia y fonofobia. En un 25% de casos hay <em>aura</em> (fenómenos visuales o sensoriales previos).</p>
+    </div>
+
+    <div class="disease-card" data-cat="vasc">
+      <span class="disease-tag tag-vasc">Vascular</span>
+      <h3>Epilepsia</h3>
+      <p>Trastorno neurológico crónico caracterizado por descargas eléctricas anormales, excesivas y sincrónicas en grupos neuronales. Afecta a ~50 millones de personas en el mundo.</p>
+      <p><strong>Tipos:</strong> Crisis focales (parte del cerebro), crisis generalizadas (todo el cerebro: ausencias, tónico-clónicas). Causas: genéticas, lesiones, tumores, infecciones.</p>
+    </div>
+
+    <!-- PSIQUIÁTRICAS -->
+    <div class="disease-card" data-cat="psiq">
+      <span class="disease-tag tag-psiq">Psiquiátrica</span>
+      <h3>Esquizofrenia</h3>
+      <p>Trastorno psicótico crónico con alteraciones en la percepción, el pensamiento y el comportamiento. Afecta al 1% de la población. Implica hiperdopaminergia en el sistema mesolímbico.</p>
+      <p><strong>Síntomas positivos:</strong> Alucinaciones auditivas, delirios, pensamiento desorganizado.</p>
+      <p><strong>Síntomas negativos:</strong> Aplanamiento afectivo, abulia, alogia, anhedonia.</p>
+    </div>
+
+    <div class="disease-card" data-cat="psiq">
+      <span class="disease-tag tag-psiq">Psiquiátrica</span>
+      <h3>Depresión Mayor</h3>
+      <p>Trastorno del estado de ánimo con base neurobiológica. Implica alteraciones en los sistemas serotoninérgico, noradrenérgico y dopaminérgico, así como reducción del volumen del hipocampo.</p>
+      <p><strong>Síntomas:</strong> Tristeza persistente, anhedonia, fatiga, alteraciones del sueño y apetito, pensamientos de muerte. Afecta a ~280 millones de personas globalmente (OMS, 2023).</p>
+    </div>
+
+    <div class="disease-card" data-cat="psiq">
+      <span class="disease-tag tag-psiq">Psiquiátrica</span>
+      <h3>TDAH</h3>
+      <p>Trastorno del neurodesarrollo. Implica hipoactividad en la corteza prefrontal y disfunción dopaminérgica/noradrenérgica. Afecta principalmente a la atención, el autocontrol y las funciones ejecutivas.</p>
+      <p><strong>Síntomas:</strong> Inatención, hiperactividad, impulsividad. Presente en ~5% de niños y ~2.5% de adultos. El tratamiento incluye metilfenidato y atomoxetina.</p>
+    </div>
+
+    <!-- AUTOINMUNES -->
+    <div class="disease-card" data-cat="auto">
+      <span class="disease-tag tag-auto">Autoinmune</span>
+      <h3>Esclerosis Múltiple</h3>
+      <p>El sistema inmune ataca la <strong>mielina</strong> de los axones del SNC (desmielinización), formando placas de esclerosis. Afecta preferentemente a mujeres jóvenes (20-40 años).</p>
+      <p><strong>Síntomas:</strong> Fatiga, alteraciones visuales (neuritis óptica), debilidad, espasticidad, problemas de coordinación y cognitivos. Curso en brotes o progresivo.</p>
+    </div>
+
+    <div class="disease-card" data-cat="auto">
+      <span class="disease-tag tag-auto">Autoinmune</span>
+      <h3>Miastenia Gravis</h3>
+      <p>Anticuerpos destruyen los receptores de acetilcolina en la unión neuromuscular. Resulta en debilidad muscular fluctuante, especialmente de los músculos extraoculares (ptosis, diplopía).</p>
+      <p><strong>Tratamiento:</strong> Inhibidores de la acetilcolinesterasa, inmunosupresores, plasmaféresis y timectomía.</p>
+    </div>
+
+    <!-- INFECCIOSAS -->
+    <div class="disease-card" data-cat="infec">
+      <span class="disease-tag tag-infec">Infecciosa</span>
+      <h3>Meningitis Bacteriana</h3>
+      <p>Inflamación de las meninges causada por bacterias (<em>N. meningitidis</em>, <em>S. pneumoniae</em>). Emergencia médica con mortalidad del 20-30% sin tratamiento.</p>
+      <p><strong>Síntomas:</strong> Rigidez de nuca, cefalea intensa, fiebre alta, fotofobia, petequias cutáneas y alteración del nivel de consciencia.</p>
+    </div>
+
+    <div class="disease-card" data-cat="infec">
+      <span class="disease-tag tag-infec">Infecciosa</span>
+      <h3>Encefalitis Viral</h3>
+      <p>Inflamación del parénquima cerebral por virus (herpes simplex tipo 1 el más frecuente, también rabia, arbovirus). La encefalitis herpética tiene predilección por el lóbulo temporal.</p>
+      <p><strong>Síntomas:</strong> Fiebre, cefalea, alteraciones conductuales, convulsiones y disminución del nivel de consciencia. Tratamiento: aciclovir intravenoso de urgencia.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════ FUENTES APA ══════════ -->
+<section id="fuentes">
+  <p class="sec-label">Bibliografía</p>
+  <h2 class="sec-title">Fuentes Consultadas</h2>
+  <p class="sec-intro"> </p>
+  <div class="sources-list">
+
+    <div class="source-item">
+      <div class="source-num">Fuente 01</div>
+      <p>Schünke, M., Schulte, E., & Schumacher, U. (2018). <em>Prometheus. LernAtlas der Anatomie: Kopf, Hals und Neuroanatomie</em> (4.ª ed.). Thieme. — Adaptado por Kenhub.<br>
+      Kenhub. (2024). <em>Sistema nervioso central: anatomía y funciones.</em> <a href="https://www.kenhub.com/es/library/anatomia/sistema-nervioso-central" target="_blank" rel="noopener">https://www.kenhub.com/es/library/anatomia/sistema-nervioso-central</a></p>
+    </div>
+
+    <div class="source-item">
+      <div class="source-num">Fuente 02</div>
+      <p>Grupo Español de Investigación en Neurooncología (GEINO). (2023). <em>Recursos educativos sobre el sistema nervioso central y sus patologías.</em> <a href="https://www.geino.es" target="_blank" rel="noopener">https://www.geino.es</a></p>
+    </div>
+
+    <div class="source-item">
+      <div class="source-num">Fuente 03</div>
+      <p>Neurocirugía de la Torre. (2023). <em>Guías clínicas y atlas neuroanatómico.</em> <a href="https://www.neurocirugiatorre.com" target="_blank" rel="noopener">https://www.neurocirugiatorre.com</a></p>
+    </div>
+
+    <div class="source-item">
+      <div class="source-num">Fuente 04</div>
+      <p>Alcaraz, V. M., & Grinberg, S. Z. (2001). <em>Estructura y función del sistema nervioso.</em> El Manual Moderno. <a href="https://books.google.com.mx/books?id=yiHHCZmekJsC" target="_blank" rel="noopener">https://books.google.com.mx/books?id=yiHHCZmekJsC</a></p>
+    </div>
+
+    <div class="source-item">
+      <div class="source-num">Fuente 05</div>
+      <p>Butler, D. S. (2002). <em>Movilización del sistema nervioso</em> (1.ª ed. en español). Paidotribo. <a href="https://books.google.com.mx" target="_blank" rel="noopener">https://books.google.com.mx</a></p>
+    </div>
+
+    <div class="source-item">
+      <div class="source-num">Fuente 06</div>
+      <p>Kandel, E. R., Koester, J. D., Mack, S. H., & Siegelbaum, S. A. (2021). <em>Principles of Neural Science</em> (6.ª ed.). McGraw-Hill. [Considerado el texto canónico de neurociencia a nivel mundial].</p>
+    </div>
+
+    <div class="source-item">
+      <div class="source-num">Fuente 07</div>
+      <p>Bear, M. F., Connors, B. W., & Paradiso, M. A. (2016). <em>Neurociencia: La exploración del cerebro</em> (4.ª ed.). Wolters Kluwer. [Texto universitario de referencia en neurociencia].</p>
+    </div>
+
+    <div class="source-item">
+      <div class="source-num">Fuente 08</div>
+      <p>Organización Mundial de la Salud (OMS). (2023). <em>Trastornos neurológicos: desafíos para la salud pública.</em> OMS. <a href="https://www.who.int/es/news-room/fact-sheets/detail/neurological-disorders" target="_blank" rel="noopener">https://www.who.int/es/news-room/fact-sheets/detail/neurological-disorders</a></p>
+    </div>
+
+    <div class="source-item">
+      <div class="source-num">Fuente 09</div>
+      <p>Purves, D., Augustine, G. J., Fitzpatrick, D., Hall, W. C., LaMantia, A. S., & White, L. E. (2019). <em>Neurociencias</em> (5.ª ed.). Editorial Médica Panamericana.</p>
+    </div>
+
+    <div class="source-item">
+      <div class="source-num">Fuente 10</div>
+      <p>Google Académico. (2024). <em>Sistema nervioso — Literatura científica revisada por pares.</em> <a href="https://scholar.google.com/scholar?q=sistema+nervioso" target="_blank" rel="noopener">https://scholar.google.com/scholar?q=sistema+nervioso</a></p>
+    </div>
+
+  </div>
+</section>
 
 </main>
 
-<!-- FOOTER -->
+<!-- ══════════ FOOTER ══════════ -->
 <footer>
-  <div class="footer-inner">
-    <div class="cetis-badge">CETIS 128 · 6°B · Programación Vespertino</div>
-    <h3>Elaborado por estudiantes de</h3>
-    <p style="color: var(--muted); font-size:0.9rem;">Centro de Estudios Tecnológicos Industrial y de Servicios No. 128</p>
-    <div class="authors-list">
-      <span class="author-chip">Israel Barragán de Jesús</span>
-      <span class="author-chip">Zoe Valentina Leyva Cruz</span>
-      <span class="author-chip">Ricardo Antonio Leyva Castro</span>
-      <span class="author-chip">Ezequiel Flores Medina</span>
-      <span class="author-chip">Derek Gabriel Morales Villa</span>
-      <span class="author-chip">Mario César Antelo Castillo</span>
+  <div class="foot-inner">
+    <div class="cetis-pill">CETIS 128 · 6°B · Programación Vespertino</div>
+    <h3>Elaborado por estudiantes del</h3>
+    <p class="sub">Centro de Estudios Tecnológicos Industrial y de Servicios No. 128 · Tijuana, B.C. · 2026</p>
+    <div class="authors">
+      <span class="author">Israel Barragán de Jesús</span>
+      <span class="author">Zoe Valentina Leyva Cruz</span>
+      <span class="author">Ricardo Antonio Leyva Castro</span>
+      <span class="author">Ezequiel Flores Medina</span>
+      <span class="author">Derek Gabriel Morales Villa</span>
+      <span class="author">Mario César Antelo Castillo</span>
     </div>
-    <p class="footer-note">Trabajo académico · Biología · 2026 · Todos los derechos reservados a sus respectivos autores.</p>
+    <p class="foot-note">
+      Trabajo académico – Biología – 6.° Semestre · Programación Vespertino · 2026<br>
+      Las fuentes citadas pertenecen a sus respectivos autores y editoriales.<br>
+      Contenido con fines exclusivamente educativos.
+    </p>
   </div>
 </footer>
 
+<script>
+function filterDiseases(cat, btn) {
+  // Update tabs
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Filter cards
+  document.querySelectorAll('.disease-card').forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// Smooth scroll highlight on nav
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav a');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => {
+        link.style.color = '';
+        link.style.borderBottomColor = '';
+        if (link.getAttribute('href') === '#' + entry.target.id) {
+          link.style.color = 'var(--cyan)';
+          link.style.borderBottomColor = 'var(--cyan)';
+        }
+      });
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+</script>
 </body>
 </html>
