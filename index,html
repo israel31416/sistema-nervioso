@@ -1,1 +1,813 @@
-# sistema-nervioso
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>El Sistema Nervioso – CETIS 128</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #0b0f1a;
+      --surface:   #131929;
+      --card:      #1a2236;
+      --border:    #243050;
+      --accent:    #4fc3f7;
+      --accent2:   #7c83f7;
+      --accent3:   #a78bfa;
+      --text:      #e8edf5;
+      --muted:     #7a8ba8;
+      --highlight: #ffe066;
+      --snc:       #4fc3f7;
+      --snp:       #a78bfa;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .brain-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 40%, #1a2a4a 0%, transparent 70%),
+        radial-gradient(ellipse 80% 60% at 20% 80%, #1a1040 0%, transparent 60%),
+        var(--bg);
+      z-index: 0;
+    }
+
+    /* Neural network SVG animation */
+    .neural-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.18;
+      z-index: 1;
+    }
+
+    header .content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+    }
+
+    .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    h1 span {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 580px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .scroll-hint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+
+    .scroll-hint svg { opacity: 0.5; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 15, 26, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 0;
+      max-width: 1100px;
+      margin: 0 auto;
+      overflow-x: auto;
+    }
+
+    nav a {
+      display: block;
+      padding: 1rem 1.2rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: color 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+
+    nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      padding: 5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    p { color: #b0bdd0; margin-bottom: 1rem; }
+
+    /* ── DIVISIÓN CARDS ── */
+    .division-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .division-grid { grid-template-columns: 1fr; }
+    }
+
+    .division-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .division-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .division-card .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+      margin-bottom: 1rem;
+    }
+
+    .snc-card .tag { background: rgba(79,195,247,0.15); color: var(--snc); }
+    .snp-card .tag { background: rgba(167,139,250,0.15); color: var(--snp); }
+
+    .division-card h3 {
+      font-family: 'Lora', serif;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .division-card .accent-line {
+      width: 40px;
+      height: 3px;
+      border-radius: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .snc-card .accent-line { background: var(--snc); }
+    .snp-card .accent-line { background: var(--snp); }
+
+    /* ── COMPONENTS ── */
+    .components-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+
+    .comp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .comp-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent2);
+    }
+
+    .comp-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+
+    .comp-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .comp-card p { font-size: 0.9rem; color: var(--muted); margin: 0; }
+
+    /* ── LÓBULOS ── */
+    .lobulos-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 700px) {
+      .lobulos-layout { grid-template-columns: 1fr; }
+    }
+
+    /* Brain SVG diagram */
+    .brain-diagram {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lobulos-list { display: flex; flex-direction: column; gap: 1rem; }
+
+    .lobulo-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: border-color 0.2s;
+    }
+
+    .lobulo-item:hover { border-color: var(--accent3); }
+
+    .lobulo-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .lobulo-item h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .lobulo-item p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+    /* ── FRONTAL FUNCTIONS ── */
+    .frontal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .frontal-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--highlight);
+      border-radius: 0 12px 12px 0;
+      padding: 1.2rem;
+    }
+
+    .frontal-item h4 { font-size: 0.9rem; font-weight: 700; color: var(--highlight); margin-bottom: 0.3rem; }
+    .frontal-item p { font-size: 0.83rem; color: var(--muted); margin: 0; }
+
+    /* ── FUENTES ── */
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .source-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .source-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    .source-card .src-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .source-card p {
+      font-size: 0.85rem;
+      color: var(--text);
+      margin: 0;
+      font-weight: 500;
+    }
+
+    /* ── FOOTER / AUTORES ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 3.5rem 1.5rem;
+      text-align: center;
+    }
+
+    .footer-inner { max-width: 800px; margin: 0 auto; }
+
+    .cetis-badge {
+      display: inline-block;
+      background: rgba(79,195,247,0.1);
+      border: 1px solid rgba(79,195,247,0.3);
+      border-radius: 99px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    footer h3 {
+      font-family: 'Lora', serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .authors-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .author-chip {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 1.5rem;
+    }
+
+    /* ── HIGHLIGHT QUOTE ── */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(79,195,247,0.08), rgba(124,131,247,0.08));
+      border: 1px solid rgba(79,195,247,0.2);
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .highlight-box::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20%;
+      bottom: 20%;
+      width: 3px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2));
+      border-radius: 2px;
+    }
+
+    .highlight-box p { color: var(--text); font-size: 1.05rem; margin: 0; }
+
+    /* ── PULSE DOT ── */
+    .pulse-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: 0.5rem;
+      animation: pulse 2s infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(79,195,247,0.5); }
+      50% { box-shadow: 0 0 0 6px rgba(79,195,247,0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      nav a { padding: 0.8rem 0.8rem; font-size: 0.75rem; }
+      section { padding: 3.5rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER HERO -->
+<header>
+  <div class="brain-bg"></div>
+  <svg class="neural-canvas" viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
+    <!-- Neural network lines -->
+    <g stroke="#4fc3f7" stroke-width="0.8" fill="none" opacity="0.6">
+      <line x1="100" y1="150" x2="300" y2="250"/>
+      <line x1="300" y1="250" x2="500" y2="120"/>
+      <line x1="500" y1="120" x2="700" y2="300"/>
+      <line x1="700" y1="300" x2="900" y2="180"/>
+      <line x1="900" y1="180" x2="1100" y2="350"/>
+      <line x1="200" y1="400" x2="400" y2="500"/>
+      <line x1="400" y1="500" x2="600" y2="380"/>
+      <line x1="600" y1="380" x2="800" y2="550"/>
+      <line x1="800" y1="550" x2="1000" y2="420"/>
+      <line x1="150" y1="600" x2="350" y2="480"/>
+      <line x1="350" y1="480" x2="550" y2="620"/>
+      <line x1="300" y1="250" x2="400" y2="500"/>
+      <line x1="500" y1="120" x2="600" y2="380"/>
+      <line x1="700" y1="300" x2="800" y2="550"/>
+      <line x1="900" y1="180" x2="1000" y2="420"/>
+    </g>
+    <g fill="#4fc3f7">
+      <circle cx="100" cy="150" r="4" opacity="0.8"/>
+      <circle cx="300" cy="250" r="5" opacity="0.9"/>
+      <circle cx="500" cy="120" r="4" opacity="0.7"/>
+      <circle cx="700" cy="300" r="6" opacity="0.9"/>
+      <circle cx="900" cy="180" r="4" opacity="0.7"/>
+      <circle cx="1100" cy="350" r="3" opacity="0.6"/>
+      <circle cx="200" cy="400" r="4" opacity="0.8"/>
+      <circle cx="400" cy="500" r="5" opacity="0.85"/>
+      <circle cx="600" cy="380" r="4" opacity="0.75"/>
+      <circle cx="800" cy="550" r="5" opacity="0.8"/>
+      <circle cx="1000" cy="420" r="4" opacity="0.7"/>
+      <circle cx="150" cy="600" r="3" opacity="0.6"/>
+      <circle cx="350" cy="480" r="4" opacity="0.7"/>
+      <circle cx="550" cy="620" r="3" opacity="0.65"/>
+    </g>
+    <g fill="#7c83f7">
+      <circle cx="250" cy="180" r="3" opacity="0.6"/>
+      <circle cx="650" cy="450" r="4" opacity="0.7"/>
+      <circle cx="950" cy="520" r="3" opacity="0.6"/>
+      <circle cx="450" cy="320" r="3" opacity="0.65"/>
+    </g>
+  </svg>
+
+  <div class="content">
+    <p class="eyebrow">Biología · Sistema Nervioso · CETIS 128</p>
+    <h1>El Sistema <span>Nervioso</span></h1>
+    <p class="hero-sub">
+      Red compleja de células y nervios que controla, integra y coordina todas las funciones del cuerpo humano.
+    </p>
+    <div class="scroll-hint">
+      <span>Explorar</span>
+      <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
+        <path d="M8 4v16M2 14l6 6 6-6" stroke="#4fc3f7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <ul>
+    <li><a href="#que-es">¿Qué es?</a></li>
+    <li><a href="#divisiones">Divisiones</a></li>
+    <li><a href="#componentes">Componentes SNC</a></li>
+    <li><a href="#lobulos">Lóbulos</a></li>
+    <li><a href="#frontal">Lóbulo Frontal</a></li>
+    <li><a href="#fuentes">Fuentes</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- QUÉ ES -->
+  <section id="que-es">
+    <p class="section-label"><span class="pulse-dot"></span>Introducción</p>
+    <h2>¿Qué es el Sistema Nervioso?</h2>
+    <div class="highlight-box">
+      <p>Es un sistema complejo formado por nervios y células que transportan mensajes hacia y desde el cerebro, la médula espinal y otras partes del cuerpo. Controla e integra las diferentes funciones corporales y mantiene la estabilidad y constancia de las variables internas de nuestro organismo.</p>
+    </div>
+    <p>El sistema nervioso es el centro de control de todas las funciones voluntarias del cuerpo. Está formado principalmente por el <strong>cerebro</strong> y la <strong>médula espinal</strong>, que forman el sistema nervioso central, junto con una extensa red de nervios periféricos que se ramifican por todo el organismo.</p>
+    <p>Sus dos grandes divisiones son el <strong>Sistema Nervioso Central (SNC)</strong> y el <strong>Sistema Nervioso Periférico (SNP)</strong>.</p>
+  </section>
+
+  <!-- DIVISIONES -->
+  <section id="divisiones">
+    <p class="section-label">Clasificación</p>
+    <h2>Divisiones del Sistema Nervioso</h2>
+    <p>El sistema nervioso se organiza en dos grandes subsistemas que trabajan de manera integrada y coordinada.</p>
+    <div class="division-grid">
+      <div class="division-card snc-card">
+        <span class="tag">SNC</span>
+        <div class="accent-line"></div>
+        <h3>Sistema Nervioso Central</h3>
+        <p>Es el centro de control de todas las funciones voluntarias del cuerpo. Está formado por el <strong>cerebro</strong> y la <strong>médula espinal</strong>. Procesa la información recibida, elabora respuestas y coordina la actividad de todo el organismo.</p>
+        <p style="margin-top:1rem; font-size:0.85rem; color: #4fc3f7;">Sustancia gris × blanca</p>
+      </div>
+      <div class="division-card snp-card">
+        <span class="tag">SNP</span>
+        <div class="accent-line"></div>
+        <h3>Sistema Nervioso Periférico</h3>
+        <p>Está compuesto por los <strong>nervios craneales</strong> y espinales que conectan el SNC con el resto del cuerpo. Transmite señales sensoriales hacia el SNC y lleva órdenes motoras de regreso a músculos y órganos.</p>
+        <p style="margin-top:1rem; font-size:0.85rem; color: #a78bfa;">Bulbo raquídeo incluido</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPONENTES SNC -->
+  <section id="componentes">
+    <p class="section-label">Sistema Nervioso Central</p>
+    <h2>Componentes Principales</h2>
+    <p>El SNC está integrado por estructuras especializadas, cada una con funciones vitales y únicas para el funcionamiento del organismo.</p>
+    <div class="components-grid">
+      <div class="comp-card">
+        <div class="comp-icon" style="background: rgba(79,195,247,0.12);">🧠</div>
+        <h3>Cerebro</h3>
+        <p>Procesa pensamientos, emociones, memoria y movimiento voluntario. Es la estructura más compleja del sistema nervioso.</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon" style="background: rgba(124,131,247,0.12);">🔗</div>
+        <h3>Médula Espinal</h3>
+        <p>Transmite señales entre el cerebro y el resto del cuerpo. También controla algunos reflejos de forma autónoma.</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon" style="background: rgba(167,139,250,0.12);">⚙️</div>
+        <h3>Tronco Encefálico</h3>
+        <p>Regula las funciones vitales como la respiración, la frecuencia cardíaca y la presión arterial. Conecta el cerebro con la médula espinal.</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon" style="background: rgba(255,224,102,0.12);">🎯</div>
+        <h3>Cerebelo</h3>
+        <p>Coordina el equilibrio, la postura y los movimientos precisos. Esencial para la coordinación motora fina.</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon" style="background: rgba(79,195,247,0.12);">🌉</div>
+        <h3>Puente (Protuberancia)</h3>
+        <p>Actúa como puente entre el cerebelo y el tronco encefálico, participando en la regulación de la respiración y el sueño.</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon" style="background: rgba(167,139,250,0.12);">🔵</div>
+        <h3>Corteza Cerebral</h3>
+        <p>Capa externa del cerebro que controla las funciones superiores: razonamiento, lenguaje, percepción sensorial y consciencia.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LÓBULOS -->
+  <section id="lobulos">
+    <p class="section-label">Anatomía Cerebral</p>
+    <h2>Lóbulos del Cerebro</h2>
+    <p>La corteza cerebral se divide en cuatro lóbulos principales, cada uno responsable de funciones específicas del procesamiento neurológico.</p>
+    <div class="lobulos-layout">
+      <!-- Brain diagram SVG -->
+      <div class="brain-diagram">
+        <svg viewBox="0 0 340 260" width="100%" xmlns="http://www.w3.org/2000/svg">
+          <!-- Brain outline -->
+          <ellipse cx="170" cy="120" rx="130" ry="95" fill="#1a2236" stroke="#243050" stroke-width="1.5"/>
+          <!-- Frontal lobe -->
+          <path d="M 60 120 Q 80 60 140 50 Q 170 45 170 85 Q 140 100 110 115 Z"
+                fill="rgba(255,224,102,0.18)" stroke="#ffe066" stroke-width="1.2"/>
+          <text x="95" y="88" fill="#ffe066" font-size="9" font-family="Space Grotesk" font-weight="700" text-anchor="middle">FRONTAL</text>
+          <!-- Parietal lobe -->
+          <path d="M 170 85 Q 200 75 230 90 Q 260 110 240 140 Q 200 130 170 130 Z"
+                fill="rgba(79,195,247,0.18)" stroke="#4fc3f7" stroke-width="1.2"/>
+          <text x="212" y="108" fill="#4fc3f7" font-size="9" font-family="Space Grotesk" font-weight="700" text-anchor="middle">PARIETAL</text>
+          <!-- Occipital lobe -->
+          <path d="M 240 140 Q 280 170 260 195 Q 230 210 200 200 Q 185 175 190 155 Z"
+                fill="rgba(167,139,250,0.18)" stroke="#a78bfa" stroke-width="1.2"/>
+          <text x="233" y="178" fill="#a78bfa" font-size="9" font-family="Space Grotesk" font-weight="700" text-anchor="middle">OCCIPITAL</text>
+          <!-- Temporal lobe -->
+          <path d="M 110 115 Q 140 130 170 130 Q 185 155 170 175 Q 130 185 100 165 Q 75 145 80 125 Z"
+                fill="rgba(124,131,247,0.18)" stroke="#7c83f7" stroke-width="1.2"/>
+          <text x="132" y="158" fill="#7c83f7" font-size="9" font-family="Space Grotesk" font-weight="700" text-anchor="middle">TEMPORAL</text>
+          <!-- Cerebellum -->
+          <ellipse cx="170" cy="215" rx="55" ry="28" fill="rgba(79,195,247,0.1)" stroke="#4fc3f7" stroke-width="1" stroke-dasharray="4,2"/>
+          <text x="170" y="219" fill="#4fc3f7" font-size="8" font-family="Space Grotesk" font-weight="600" text-anchor="middle">CEREBELO</text>
+          <!-- Brain stem -->
+          <rect x="150" y="195" width="40" height="35" rx="5" fill="rgba(255,224,102,0.1)" stroke="#ffe066" stroke-width="1" stroke-dasharray="4,2"/>
+          <text x="170" y="216" fill="#ffe066" font-size="7.5" font-family="Space Grotesk" font-weight="600" text-anchor="middle">TRONCO</text>
+          <!-- Dividing line -->
+          <line x1="170" y1="50" x2="170" y2="195" stroke="#243050" stroke-width="0.8" stroke-dasharray="3,3"/>
+        </svg>
+      </div>
+
+      <div class="lobulos-list">
+        <div class="lobulo-item">
+          <div class="lobulo-dot" style="background:#ffe066;"></div>
+          <div>
+            <h4 style="color:#ffe066;">Lóbulo Frontal</h4>
+            <p>Centro de la personalidad. Controla el movimiento voluntario, la toma de decisiones, el lenguaje (área de Broca) y las funciones ejecutivas.</p>
+          </div>
+        </div>
+        <div class="lobulo-item">
+          <div class="lobulo-dot" style="background:#4fc3f7;"></div>
+          <div>
+            <h4 style="color:#4fc3f7;">Lóbulo Parietal</h4>
+            <p>Procesa la información sensorial del tacto, temperatura, dolor y posición corporal. Integra información espacial.</p>
+          </div>
+        </div>
+        <div class="lobulo-item">
+          <div class="lobulo-dot" style="background:#7c83f7;"></div>
+          <div>
+            <h4 style="color:#7c83f7;">Lóbulo Temporal</h4>
+            <p>Involucrado en la audición, el lenguaje (área de Wernicke), la memoria y el reconocimiento de objetos y rostros.</p>
+          </div>
+        </div>
+        <div class="lobulo-item">
+          <div class="lobulo-dot" style="background:#a78bfa;"></div>
+          <div>
+            <h4 style="color:#a78bfa;">Lóbulo Occipital</h4>
+            <p>Centro primario del procesamiento visual. Interpreta la información que llega desde los ojos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LÓBULO FRONTAL -->
+  <section id="frontal">
+    <p class="section-label">Lóbulo Frontal</p>
+    <h2>Centro de la Personalidad</h2>
+    <p>El lóbulo frontal es considerado la sede de la personalidad y las funciones cognitivas más complejas del ser humano. Alberga la corteza motora y el área de Broca, esencial para la producción del lenguaje.</p>
+    <div class="frontal-grid">
+      <div class="frontal-item">
+        <h4>🏃 Control Motor</h4>
+        <p>Dirige el movimiento voluntario a través de la corteza motora primaria.</p>
+      </div>
+      <div class="frontal-item">
+        <h4>🧭 Toma de Decisiones</h4>
+        <p>Evalúa opciones y consecuencias para orientar el comportamiento.</p>
+      </div>
+      <div class="frontal-item">
+        <h4>🔧 Resolución de Problemas</h4>
+        <p>Planifica, organiza y ejecuta estrategias para resolver situaciones complejas.</p>
+      </div>
+      <div class="frontal-item">
+        <h4>❤️ Control Emocional</h4>
+        <p>Regula emociones y conducta social, modulando impulsos y respuestas afectivas.</p>
+      </div>
+      <div class="frontal-item">
+        <h4>🗣️ Lenguaje (Broca)</h4>
+        <p>El área de Broca, en el frontal inferior izquierdo, controla la producción del habla.</p>
+      </div>
+      <div class="frontal-item">
+        <h4>🧩 Funciones Ejecutivas</h4>
+        <p>Memoria de trabajo, flexibilidad cognitiva y control de la atención voluntaria.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUENTES -->
+  <section id="fuentes">
+    <p class="section-label">Bibliografía</p>
+    <h2>Fuentes Consultadas</h2>
+    <p>Este trabajo se apoyó en fuentes académicas y especializadas en neurociencia y anatomía del sistema nervioso.</p>
+    <div class="sources-grid">
+      <a class="source-card" href="https://www.kenhub.com" target="_blank" rel="noopener">
+        <p class="src-label">Kenhub</p>
+        <p>Atlas de anatomía humana — Sistema nervioso central y periférico</p>
+      </a>
+      <a class="source-card" href="https://www.geino.es" target="_blank" rel="noopener">
+        <p class="src-label">GEINO</p>
+        <p>Grupo Español de Investigación en Neurooncología — Recursos educativos</p>
+      </a>
+      <a class="source-card" href="https://www.neurocirugiatorre.com" target="_blank" rel="noopener">
+        <p class="src-label">Neurocirugía de la Torre</p>
+        <p>Guías clínicas sobre estructura y función del sistema nervioso</p>
+      </a>
+      <a class="source-card" href="https://books.google.com.mx/books?id=yiHHCZmekJsC" target="_blank" rel="noopener">
+        <p class="src-label">Google Libros</p>
+        <p>Sistema nervioso — Texto académico universitario</p>
+      </a>
+      <a class="source-card" href="https://books.google.com" target="_blank" rel="noopener">
+        <p class="src-label">Víctor Manuel Alcaraz</p>
+        <p>Estructura y función del sistema nervioso — Google Libros</p>
+      </a>
+      <a class="source-card" href="https://books.google.com" target="_blank" rel="noopener">
+        <p class="src-label">David S. Butler</p>
+        <p>Movilización del sistema nervioso — Google Libros</p>
+      </a>
+      <a class="source-card" href="https://scholar.google.com" target="_blank" rel="noopener">
+        <p class="src-label">Google Académico</p>
+        <p>Artículos científicos y publicaciones sobre el sistema nervioso</p>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="cetis-badge">CETIS 128 · 6°B · Programación Vespertino</div>
+    <h3>Elaborado por estudiantes de</h3>
+    <p style="color: var(--muted); font-size:0.9rem;">Centro de Estudios Tecnológicos Industrial y de Servicios No. 128</p>
+    <div class="authors-list">
+      <span class="author-chip">Israel Barragán de Jesús</span>
+      <span class="author-chip">Zoe Valentina Leyva Cruz</span>
+      <span class="author-chip">Ricardo Antonio Leyva Castro</span>
+      <span class="author-chip">Ezequiel Flores Medina</span>
+      <span class="author-chip">Derek Gabriel Morales Villa</span>
+      <span class="author-chip">Mario César Antelo Castillo</span>
+    </div>
+    <p class="footer-note">Trabajo académico · Biología · 2026 · Todos los derechos reservados a sus respectivos autores.</p>
+  </div>
+</footer>
+
+</body>
+</html>
